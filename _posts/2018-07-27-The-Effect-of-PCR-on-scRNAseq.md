@@ -5,7 +5,7 @@ codehide: true
 title: The Effect of PCR on scRNAseq
 ---
 
-One interesting facet of the Tabula Muris data is the fact that we have data from the same samples using two different technologies: microfluidic droplet-based 3’-end counting using the 10x genomics platform, and FACS-based full length transcript analysis with Smart-Seq2.Both platforms have advantages: droplets allow for rapidly profiling thousands of cells, but tend to recover fewer genes per cell and at a lower depth.
+One interesting facet of the Tabula Muris data is the fact that we have data from the same samples using two different technologies: microfluidic droplet-based 3’-end counting using the 10x genomics platform, and FACS-based full length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets allow for rapidly profiling thousands of cells, but tend to recover fewer genes per cell and at a lower depth.
 
 Our dataset provides us with the opportunity to compare the advantages of these technologies on a relatively level playing field. For a detailed discussion of this topic, you can check out the [preprint on bioR$\chi$iv](https://www.biorxiv.org/content/early/2018/03/29/237446).
 
@@ -60,7 +60,7 @@ alt.hconcat(
                       'Droplet': (droplet_thymus.X.sum(0) + 1) / droplet_thymus.X.sum()}),
         title='Fraction of total reads'
     ).mark_point(opacity=0.3).encode(
-        x=alt.X('FACS', type='quantitative', scale=alt.Scale(type='log')), 
+        x=alt.X('FACS', type='quantitative', scale=alt.Scale(type='log')),
         y=alt.Y('Droplet', type='quantitative', scale=alt.Scale(type='log'))
     ),
     alt.Chart(
@@ -68,7 +68,7 @@ alt.hconcat(
                       'Droplet': (1 + (droplet_thymus.X > 0).sum(0)).T / droplet_thymus.X.shape[0]}),
         title='Percent of cells with ≥ 1 read'
     ).mark_point(opacity=0.3).encode(
-        x=alt.X('FACS', type='quantitative', axis=alt.Axis(format='%')), 
+        x=alt.X('FACS', type='quantitative', axis=alt.Axis(format='%')),
         y=alt.Y('Droplet', type='quantitative', axis=alt.Axis(format='%'))
     )
 )
@@ -93,7 +93,7 @@ def plot_expression_v_percent(cell_gene_reads:np.ndarray, title:str):
     return alt.Chart(pd.DataFrame({'x': x, 'y': y}), title=title).mark_point(opacity=0.1).encode(
         alt.X('x', type='quantitative', scale=alt.Scale(type='log'),
               axis=alt.Axis(title='Fraction of total reads')),
-        alt.Y('y', type='quantitative', scale=alt.Scale(type='log'), 
+        alt.Y('y', type='quantitative', scale=alt.Scale(type='log'),
               axis=alt.Axis(title='Percent of cells with ≥1 read'))
     )
 
@@ -122,7 +122,7 @@ We're going to build a [generative model](https://en.wikipedia.org/wiki/Generati
      - in the droplet method, this is where UMIs are introduced
  3. The cDNA is **PCR amplified, fragmented, and amplified again** as part of library preparation
  4. The amplified library is **sequenced**, demultiplexed, aligned, etc.
- 
+
 We can think of each of the bolded portions as a sampling step. In step 1, the cells are sampled from a population that contains an unknown amount of diversity, and our collection methods may have different biases at this step. In step 2, individual mRNA molecules are captured with some efficiency that is dependent on the biochemical method and potentially the cell state or even the gene sequence itself. Step 3 can be broken down into many *different* sampling steps, one for each round of PCR, as individual molecules are amplified at different rates of efficiency.
 
 All of these sampling steps are important to think about for experimental design and interpretation. Here we are going to keep steps 1, 2, and 4 constant, by assuming a homogenous cell population, random capture and random sequencing: we will only examine the effect of step 3. Specifically: how does a potentially-biased PCR process affect the final gene count? We'll start by simulating some data.
@@ -142,7 +142,7 @@ n_genes = 20000
 n_cells = 2000
 n_umis = 5500 * np.ones(shape=n_cells)
 
-# log-gamma distribution of gene expression 
+# log-gamma distribution of gene expression
 gene_levels = np.exp(np.random.gamma(4, 1, size=n_genes))
 
 # every cell has the same expression distribution
@@ -180,14 +180,14 @@ cs = []
 for s in np.linspace(0, 4.5, 4):
     # log-normal noise for the number of reads (with a lower bound to represent minimum depth)
     noisy_library = np.exp(st.truncnorm.rvs(-1, 2, loc=8.5, scale=s, size=n_cells)).astype(int)
-    
+
     # gene capture: select a random n_reads out of the gene pool for each cell
     noisy_library_umis = np.vstack([np.random.multinomial(noisy_library[i], gene_p[i,:]) for i in range(n_cells)])
-    
+
     # add log-normal noise to the gene expression of individual cells
     noisy_genes = gene_levels[None,:] * np.exp(np.random.normal(loc=0, scale=s, size=(n_cells, n_genes)))
     noisy_gene_p = noisy_genes / noisy_genes.sum(1)[:, None]
-    
+
     noisy_gene_umis = np.vstack([np.random.multinomial(n_umis[i], noisy_gene_p[i,:]) for i in range(n_cells)])
 
     cs.append(alt.vconcat(plot_expression_v_percent(noisy_library_umis, f'Library Noise: {s}').properties(width=200, height=200),
@@ -298,14 +298,14 @@ However, there's another factor that we haven't considered yet. When we do scRNA
 # random number of possible fragments per gene, poisson distributed
 fragments_per_gene = 1 + np.random.poisson(1, size=n_genes) # add one to ensure ≥1 fragment per gene
 fragment_i = np.repeat(np.arange(n_genes), fragments_per_gene) # index for fragments
-n_fragments = fragments_per_gene.sum() # total number of fragments 
+n_fragments = fragments_per_gene.sum() # total number of fragments
 
 # each fragment is at the level of the gene it comes from
 noisy_fragments = np.repeat(noisy_genes, fragments_per_gene, axis=1)
 noisy_fragment_p = noisy_fragments / noisy_fragments.sum(1)[:, None]
 
 # randomly sample fragments, rather than genes, according the per-cell library size
-fragment_umis = np.vstack([np.random.multinomial(noisy_library[i], noisy_fragment_p[i,:]) 
+fragment_umis = np.vstack([np.random.multinomial(noisy_library[i], noisy_fragment_p[i,:])
                             for i in range(n_cells)])
 
 # sum up all the fragment reads for a gene to get per-gene UMI counts
@@ -364,8 +364,8 @@ for bc in gene_counts:
     for g in gene_counts[bc]:
         if g in g_i:
             read_matrix[bc_i[bc], g_i[g]] = gene_counts[bc][g]
-            
-########################            
+
+########################
 
 # # our matrix of values
 # read_matrix = np.zeros_like(droplet_thymus.X)
@@ -379,7 +379,7 @@ for bc in gene_counts:
 #         and a.has_tag('GN') and a.get_tag['GN'] in g_i   # that maps to a single gene,
 #         and a.has_tag('RE') and a.get_tag('RE') == 'E'   # specifically to an exon,
 #         and a.has_tag('UB')):                            # and has a good UMI
-        
+
 #         # then we add it to the count matrix
 #         read_matrix[bc_i[a.get_tag('CB')], g_i[a.get_tag('GN')]] += 1
 #         # if this isn't marked a duplicate, count it as a UMI
@@ -388,7 +388,7 @@ for bc in gene_counts:
 
 # umi data is identical to what we had before
 assert np.array_equal(umi_matrix, droplet_thymus.X)
-        
+
 # cells have all the same genes, just the counts are different
 assert np.array_equal((read_matrix > 0), (droplet_thymus.X > 0))
 
@@ -405,7 +405,7 @@ plot_expression_v_percent(droplet_thymus.X, 'Droplet data') | plot_expression_v_
 def low_efficiency_genes(cell_gene_reads:np.ndarray):
     x = cell_gene_reads.sum(0) / cell_gene_reads.sum()
     y = (cell_gene_reads > 0).sum(0) / cell_gene_reads.shape[0]
-    
+
     # bin values by y
     idx = np.digitize(y, 10**np.linspace(-4, 0, 21))
 
@@ -420,11 +420,11 @@ def plot_low_efficiency_genes(cell_gene_reads:np.ndarray, low_g:np.ndarray, titl
     x = cell_gene_reads.sum(0) / cell_gene_reads.sum()
     y = (cell_gene_reads > 0).sum(0) / cell_gene_reads.shape[0]
 
-    return alt.Chart(pd.DataFrame({'x': x[nz], 'y': y[nz], 'low_g': low_g[nz]}), 
+    return alt.Chart(pd.DataFrame({'x': x[nz], 'y': y[nz], 'low_g': low_g[nz]}),
                      title=title).mark_point(opacity=0.1).encode(
         alt.X('x', type='quantitative', scale=alt.Scale(type='log'),
               axis=alt.Axis(title='Fraction of total reads')),
-        alt.Y('y', type='quantitative', scale=alt.Scale(type='log'), 
+        alt.Y('y', type='quantitative', scale=alt.Scale(type='log'),
               axis=alt.Axis(title='Percent of cells with ≥1 read')),
         color='low_g'
     )
@@ -470,13 +470,13 @@ print(
 )
 ```
 
-    
+
         n genes:			23433
         low in facs:		3036
         low in droplets:		629
         intersection:		158
         hypergeometric test:	2.01e-17
-        
+
 
 
 Without using UMIs to deduplicate the read data, we see a very similar story to the plot of FACS data up above, consistent with our model of how PCR bias can add noise to read counts. Of note, the cloud of amplified reads is not shifted so far to the right as it was in the plot of FACS data. While both protocols have about the same number of PCR cycles, it appears that the efficiency of PCR in the 10X library is somewhat lower overall, with 20-30x amplification rather than the >100x amplification in the FACS data. Those numbers suggest that PCR is somewhere around 30% efficient in the 10X library and 60-70% efficient in the SmartSeq2 protocol. However, the analysis above show that higher efficiency is not necessarily desirable&mdash;variation in efficiency leads to a lot of noise in gene counts, and in the absence of UMIs this can make analysis more challenging. When UMIs are present, higher amplification will just reduce the effective depth of the library.
@@ -490,7 +490,7 @@ While this blog post is mostly about a particularly confusing plot and trying to
  1. Looking at these plots and how they are affected by noise has emphasized the importance of UMIs for getting a good estimate of gene expression. By having a strong statistical model for how the data are generated, we can more easily identify genes with heterogeneous expression within a cluster. This level of detail is much more difficult to resolve when read counts are affected by amplification noise.
  2. We spent a fair amount of time trying to recreate the shadow on the left side of the FACS plot, but we haven't discussed the implications of that shadow. According to our model, those are genes that have very low PCR efficiency and may not have been amplified at all during the second PCR step. Nevertheless, we are recovering those reads from the sequencer at a rate consistent with their expression. This suggests that we might be able to optimize our protocols by doing fewer rounds of library amplification. That would allow us to improve our sequencing throughput, either by sequencing more cells at once or by sequencing the same number of cells much more deeply.
  3. When we are confident that we have a homogenous cluster of cells, the plots above show us a natural method of imputing gene expression values when they are missing, even in the face of PCR noise. The proportion of cells with ≥1 read is a good predictor of the number of UMIs in each cell, and this holds true even when the reads themselves are subjected to a biased PCR process. The points in the second plot have shifted to the right but not up or down, so it's possible the effect of amplification can be removed by fitting a curve to the top left of the graph. However, when we are not confident of a homogenous population this becomes much riskier, and it is harder to have that confidence in the face of noisy reads.
- 
+
 #### Some references I may or may not include
 
  * [hemberg](https://www.biorxiv.org/content/biorxiv/early/2017/05/25/065094.full.pdf)
@@ -506,4 +506,4 @@ The Tabula Muris project is built on a large set of single-cell mRNA sequencing 
  1. [Intro](link) - introduction and overview
  2. [Another post](link) - a post
  3. [Something else](link) - another post
- 
+
