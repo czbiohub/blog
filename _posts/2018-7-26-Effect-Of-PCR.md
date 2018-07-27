@@ -1,7 +1,13 @@
 ---
 layout: post
+mathjax: true
+codehide: true
 title: The Effect of PCR on scRNA-seq
 ---
+
+One interesting facet of the Tabula Muris data is the fact that we have data from the same samples using two different technologies: microfluidic droplet-based 3’-end counting using the 10x genomics platform, and FACS-based full length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets allow for rapidly profiling thousands of cells, but tend to recover fewer genes per cell and at a lower depth.
+
+Our dataset provides us with the opportunity to compare the advantages of these technologies on a relatively level playing field. For a detailed discussion of this topic, you can check out the [preprint on bioR$\chi$iv](https://www.biorxiv.org/content/early/2018/03/29/237446).
 
 ```python
 import numpy as np
@@ -24,13 +30,6 @@ alt.renderers.register('png', alt.vegalite.v2.display.png_renderer)
 alt.renderers.enable('png')
 ```
 
-## The effect of PCR on scRNA-seq
-
-One interesting facet of the Tabula Muris data is the fact that we have data from the same samples using two different technologies: microfluidic droplet-based 3’-end counting using the 10x genomics platform, and FACS-based full length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets allow for rapidly profiling thousands of cells, at the cost of  This provided us with the opportunity to compare the advantages of these technologies on a relatively level playing field. For a detailed discussion of this topic, you can check out the [preprint on bioR$\chi$iv](https://www.biorxiv.org/content/early/2018/03/29/237446).
-
-We start with a simple question: when looking at cells of the same type using both technologies, how often do we see evidence of any particular gene?
-
-
 ```python
 # read in FACS data
 facs_metadata = pd.read_csv('../../data/TM_facs_metadata.csv', index_col=0, dtype=str)
@@ -49,6 +48,7 @@ facs_thymus.X = np.asarray(facs_thymus.X.todense())
 droplet_thymus.X = np.asarray(droplet_thymus.X.todense())
 ```
 
+We start with a simple question: when looking at cells of the same type using both technologies, how often do we see evidence of any particular gene?
 
 ```python
 alt.hconcat(
@@ -71,15 +71,9 @@ alt.hconcat(
 )
 ```
 
-
-
-
 ![png](/images/output_4_0.png)
 
-
-
 It's tempting to stare at these plots and start to draw conclusions about the relative merits of droplet- and FACS-based methods. Indeed, in the [initial draft](https://www.biorxiv.org/content/early/2017/12/20/237446) we devoted some time to these types of plots. But differences in methodology mean that the data are not exactly comparable. To illustrate that point, we'll change the axes for these plots, and for each method we'll plot the per-gene fraction of total reads versus the percent of cells with ≥1 read.
-
 
 ```python
 
@@ -99,12 +93,7 @@ def plot_expression_v_percent(cell_gene_reads:np.ndarray, title:str):
 plot_expression_v_percent(droplet_thymus.X, 'Droplet data') | plot_expression_v_percent(facs_thymus.X, title='FACS data')
 ```
 
-
-
-
 ![png](/images/output_6_0.png)
-
-
 
 The difference between these plots is pretty striking. On the droplet side, the relationship between expression and dropout is quite strong: genes that are highly expressed are more likely to be observed in every cell, while low-expression genes are seen less often. This relationship is what we would expect from a Poisson distribution, with the addition of noise due to variation in library depth and expression variation. This data can be modeled as a [negative binomial](http://www.nxn.se/valent/2018/1/30/count-depth-variation-makes-poisson-scrna-seq-data-negative-binomial). Deviations from that model are a sign of heterogeneity in gene expression, and this observation can be used to [select variable genes for analysis](https://www.biorxiv.org/content/early/2018/05/17/065094).
 
@@ -136,8 +125,6 @@ All of these sampling steps are important to think about for experimental design
  4. We'll sample 5,500 UMIs from every cell using a multinomial distribution
      - Technically the [multivariate hypergeometric](https://en.wikipedia.org/wiki/Hypergeometric_distribution#Multivariate_hypergeometric_distribution) is the right distribution here, but it is difficult to implement efficiently and the multinomial has almost identical behavior at this scale.
 
-
-
 ```python
 n_genes = 20000
 n_cells = 2000
@@ -157,15 +144,9 @@ cell_gene_umis = np.vstack([np.random.multinomial(n_umis[i], gene_p[i,:])
                             for i in range(n_cells)])
 
 plot_expression_v_percent(cell_gene_umis, 'Basic model')
-
 ```
 
-
-
-
 ![png](/images/output_9_0.png)
-
-
 
 This looks promising! When we consider a specific gene, our sampling process is a [binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution) with $n$ equal to the number of reads and $p$ equal to the relative abundance of that gene in the cell. When $n$ is large and $p$ is small, a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution) is a good approximation for this process, which is why most people refer to scRNA gene counts (assuming no variation between cells) as being [Poisson-distributed](http://www.nxn.se/valent/2018/1/30/count-depth-variation-makes-poisson-scrna-seq-data-negative-binomial). Seeing a particular gene $g$ in a cell is based on the depth of the library and the gene's relative expression, and the probability of seeing $k$ reads is given by:
 
@@ -173,9 +154,7 @@ $$ P_g(k\textrm{ reads}) = \frac{\lambda^k e^{-\lambda}}{k!}\hspace{40pt}\lambda
 
 When we are counting the prevalence of missing genes, this simplifies to $ P_g(k=0) = e^{-\lambda}$ and the plot above shows the complement, $ P_g(k>0) = 1 - e^{-\lambda}$
 
-
 The plot above looks very similar to our droplet data, but it's much cleaner. There are two reasons for that: one is that we simulated identical cells, and the second is that we simulated identical library sizes. We can vary each of these assumptions in turn and see what happens to our data.
-
 
 ```python
 cs = []
@@ -199,15 +178,9 @@ for s in np.linspace(0, 4.5, 4):
 alt.hconcat(*cs)
 ```
 
-
-
-
 ![png](/images/output_11_0.png)
 
-
-
 These plots are useful for gaining an intuition about how noise in our data affects the result. There is a clear difference between these two effects: noise in the size of the library makes the Poisson-derived curve slightly "fuzzier", but it also raises the bottom end of the distribution because the cells with high coverage are able to recover rare genes. Noise in the gene expression lowers the top line and spreads out the distribution, because genes are less evenly distributed and so they are found in fewer cells than would be expected based on expression. In reality we tend to see a combination of these two effects. For this post we'll just eyeball some parameters that look like the droplet data.
-
 
 ```python
 noisy_library = np.exp(st.truncnorm.rvs(-1, 2, loc=8.5, scale=1.5, size=n_cells)).astype(int)
@@ -222,12 +195,7 @@ noisy_umis = np.vstack([np.random.multinomial(noisy_library[i], noisy_gene_p[i,:
 plot_expression_v_percent(noisy_umis, f'Library, Expression Noise: 1.5')
 ```
 
-
-
-
 ![png](/images/output_13_0.png)
-
-
 
 This plot looks okay. It doesn't look exactly like the thymus data, but our model is still pretty simple in comparison to real tissue. In particular, we are explicitly simulating a single population, while the real data contains at least three cell types and possibly more that we don't have the resolution to identify.
 
@@ -240,7 +208,6 @@ Let's build a model for this process. We can use a [beta distribution](https://e
 $$ PCR_{i}(\ j+1\ ) = PCR_{i}(\ j\ ) + \mathrm{Binom}(PCR_{i}(\ j\ ), b_i)$$
 
 That is: in each round of PCR, each of the existing reads is copied with a probability that is specific to the gene it came from.
-
 
 ```python
 # PCR noise model: every fragment has an affinity for PCR, and every round we do a ~binomial doubling
@@ -268,17 +235,11 @@ noisy_reads = pcr_noise(noisy_umis, pcr_betas, n=13)
 plot_pcr_betas(pcr_betas) | plot_expression_v_percent(noisy_reads, 'UMIs + PCR')
 ```
 
-
-
-
 ![png](/images/output_15_0.png)
-
-
 
 This looks reasonably close to the FACS plot above&mdash;the range in PCR efficiency spreads out the data across a few orders of magnitude. As we go through 13 rounds of PCR the high efficiency genes shift to the right while the lower ones lag behind. The right edge of the curve is fairly sharp, as nothing can replicate more efficiently than once per round.
 
 There is one piece missing from this plot, however, which is the "shadow" of the UMI curve that we could see on the left side. Our intuition from the model so far is that these points are not being amplified very much at all. One way to get more low-efficiency genes would be to use a wider beta distribution (with more density near zero), but it actually looks like there is a small subpopulation with very low efficiency that is separate from the rest. We can model this with a mixture of two beta distributions, although it's unclear why that should be the case. Those of you with more experience troubleshooting PCR can tell us if this seems like a reasonable distribution of efficiency across random DNA sequences.
-
 
 ```python
 # a bimodel distribution for pcr efficiency: most fragments around 0.6-0.7 but with spike near 0.
@@ -293,17 +254,11 @@ plot_pcr_betas(pcr_betas) | plot_expression_v_percent(noisy_reads, 'Reads from b
 
 ```
 
-
-
-
 ![png](/images/output_17_0.png)
-
-
 
 This looks pretty good, but it's not quite right. The bimodal distribution gave us a subpopulation of points on the left side of the plot, but it didn't give us the relationship between expression and PCR efficiency that we can see in the FACS data. We could reproduce that relationship in a hacky way, by setting a random subset of low-expression genes to have low PCR efficiency. But that wouldn't be very satisfying&mdash;there's no reason that the PCR reaction should care about the expression level of the genes.
 
 However, there's another factor that we haven't considered yet. When we do scRNA-seq we aren't sequencing complete gene transcripts, we're sequencing _fragments_. The number of different fragments we see from a gene will depend on its expression level, because a highly-expressed gene will be sampled more often and so we are more likely to see multiple different fragments. A gene with low expression could potentially be represented by a single fragment, and if that fragment has poor PCR efficiency, it would remain on the UMI curve, leaving us the "shadow" that we expected. We can try this out by changing our model to work on gene fragments rather than genes. Most of it is the same, but in the beginning we add a step of generating a random number of fragments for each gene (Poisson distributed) and later we assign each _fragment_ its own PCR efficiency. We'll show the results of both the UMI distribution and the PCR-amplified version.
-
 
 ```python
 # random number of possible fragments per gene, poisson distributed
@@ -337,67 +292,38 @@ gene_reads = np.hstack([fragment_reads[:, fragment_i == i].sum(1)[:, None] for i
 plot_expression_v_percent(gene_umis, 'UMIs from gene fragments') | plot_expression_v_percent(gene_reads, 'Reads from gene fragments')
 ```
 
-
-
-
 ![png](/images/output_19_0.png)
-
-
 
 Now that's more like it! We have most of the characteristics of the plot we generated from real data, up to some biological noise and parameter tweaks (in particular I'm still unsatistified with the distribution of gene expression levels). The addition of gene fragments didn't change how our model behaves on UMI data, but it allowed us to reproduce the "shadow" of the UMI curve for low-expression genes.
 
 To close the loop on this post, we'll look at what our droplet data would be if we didn't collapse reads via the UMIs. To do this, we need to parse the BAM file that is output by CellRanger. For those following along at home, be warned that it takes a _long_ time to read through the entire BAM file.
 
-
 ```python
 # we'll need the pysam library to read the bam file
 # import pysam
 
-# # dictionaries that let us index into the read matrix by barcode and gene
+# dictionaries that let us index into the read matrix by barcode and gene
 bc_i = {bc:i for i,bc in enumerate(droplet_thymus.obs.index.map(lambda v: v.rsplit('_')[-1] + '-1'))}
 g_i = {g:i for i,g in enumerate(droplet_thymus.var.index)}
 
-#########################
-# code for loading the read objects, which otherwise take a long time to create
-import pickle
-with open('../../thymus_10x.pickle', 'rb') as f:
-    gene_counts = pickle.load(f)
-
-with open('../../thymus_10x_umi.pickle', 'rb') as f:
-    umi_counts = pickle.load(f)
-
-umi_matrix = np.zeros_like(droplet_thymus.X)
-for bc in umi_counts:
-    for g in umi_counts[bc]:
-        if g in g_i:
-            umi_matrix[bc_i[bc], g_i[g]] = umi_counts[bc][g]
-
+# our matrix of values
 read_matrix = np.zeros_like(droplet_thymus.X)
-for bc in gene_counts:
-    for g in gene_counts[bc]:
-        if g in g_i:
-            read_matrix[bc_i[bc], g_i[g]] = gene_counts[bc][g]
+# as a sanity check, we'll show that we can reconstruct the UMI data
+umi_matrix = np.zeros_like(droplet_thymus.X)
 
-########################
+bam_file = pysam.AlignmentFile('10X_P7_11_possorted_genome_bam.bam', mode='rb')
+for a in bam_file:
+    if (a.mapq == 255                                    # high quality mapping
+        and a.has_tag('CB') and a.get_tag('CB') in bc_i  # in our set of barcodes,
+        and a.has_tag('GN') and a.get_tag['GN'] in g_i   # that maps to a single gene,
+        and a.has_tag('RE') and a.get_tag('RE') == 'E'   # specifically to an exon,
+        and a.has_tag('UB')):                            # and has a good UMI
 
-# # our matrix of values
-# read_matrix = np.zeros_like(droplet_thymus.X)
-# # as a sanity check, we'll show that we can reconstruct the UMI data
-# umi_matrix = np.zeros_like(droplet_thymus.X)
-
-# bam_file = pysam.AlignmentFile('10X_P7_11_possorted_genome_bam.bam', mode='rb')
-# for a in bam_file:
-#     if (a.mapq == 255                                    # high quality mapping
-#         and a.has_tag('CB') and a.get_tag('CB') in bc_i  # in our set of barcodes,
-#         and a.has_tag('GN') and a.get_tag['GN'] in g_i   # that maps to a single gene,
-#         and a.has_tag('RE') and a.get_tag('RE') == 'E'   # specifically to an exon,
-#         and a.has_tag('UB')):                            # and has a good UMI
-
-#         # then we add it to the count matrix
-#         read_matrix[bc_i[a.get_tag('CB')], g_i[a.get_tag('GN')]] += 1
-#         # if this isn't marked a duplicate, count it as a UMI
-#         if not a.is_duplicate:
-#             umi_matrix[bc_i[a.get_tag('CB')], g_i[a.get_tag('GN')]] += 1
+        # then we add it to the count matrix
+        read_matrix[bc_i[a.get_tag('CB')], g_i[a.get_tag('GN')]] += 1
+        # if this isn't marked a duplicate, count it as a UMI
+        if not a.is_duplicate:
+            umi_matrix[bc_i[a.get_tag('CB')], g_i[a.get_tag('GN')]] += 1
 
 # umi data is identical to what we had before
 assert np.array_equal(umi_matrix, droplet_thymus.X)
@@ -408,13 +334,7 @@ assert np.array_equal((read_matrix > 0), (droplet_thymus.X > 0))
 plot_expression_v_percent(droplet_thymus.X, 'Droplet data') | plot_expression_v_percent(read_matrix, title='Droplet data without using UMIs')
 ```
 
-
-
-
 ![png](/images/output_21_0.png)
-
-
-
 
 ```python
 def low_efficiency_genes(cell_gene_reads:np.ndarray):
@@ -446,32 +366,19 @@ def plot_low_efficiency_genes(cell_gene_reads:np.ndarray, low_g:np.ndarray, titl
 
 ```
 
-
 ```python
 droplet_low_g = low_efficiency_genes(read_matrix)
 plot_low_efficiency_genes(read_matrix, droplet_low_g, 'test')
 ```
 
-
-
-
 ![png](/images/output_23_0.png)
-
-
-
 
 ```python
 facs_low_g = low_efficiency_genes(facs_thymus.X)
 plot_low_efficiency_genes(facs_thymus.X, facs_low_g, 'facs')
 ```
 
-
-
-
 ![png](/images/output_24_0.png)
-
-
-
 
 ```python
 print(
@@ -489,14 +396,11 @@ print(
 )
 ```
 
-
         n genes:			23433
         low in facs:		3036
         low in droplets:		629
         intersection:		158
         hypergeometric test:	2.01e-17
-
-
 
 Without using UMIs to deduplicate the read data, we see a very similar story to the plot of FACS data up above, consistent with our model of how PCR bias can add noise to read counts. Of note, the cloud of amplified reads is not shifted so far to the right as it was in the plot of FACS data. While both protocols have about the same number of PCR cycles, it appears that the efficiency of PCR in the 10X library is somewhat lower overall, with 20-30x amplification rather than the >100x amplification in the FACS data. Those numbers suggest that PCR is somewhere around 30% efficient in the 10X library and 60-70% efficient in the SmartSeq2 protocol. However, the analysis above show that higher efficiency is not necessarily desirable&mdash;variation in efficiency leads to a lot of noise in gene counts, and in the absence of UMIs this can make analysis more challenging. When UMIs are present, higher amplification will just reduce the effective depth of the library.
 
