@@ -1,0 +1,15 @@
+{% if page.codehide %}
+<script>
+  $(document).ready(function(){
+    $('div.prompt').hide();
+    $('div.back-to-top').hide();
+    $('nav#menubar').hide();
+    $('.breadcrumb').hide();
+    $('.hidden-print').hide();
+  });
+</script>
+
+<footer id="attribution" style="float:right; color:#999; background:#fff;">
+Javascript fanciness thanks to <a href="http://chris-said.io/2016/02/13/how-to-make-polished-jupyter-presentations-with-optional-code-visibility/">Chris Said</a>
+</footer>
+{% endif %}

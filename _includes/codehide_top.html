@@ -1,0 +1,21 @@
+{% if page.codehide %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+  function code_toggle() {
+    if (code_shown){
+      $('pre.highlight').hide('500');
+      $('#toggleButton').val('Show Code')
+    } else {
+      $('pre.highlight').show('500');
+      $('#toggleButton').val('Hide Code')
+    }
+    code_shown = !code_shown
+  }
+
+  $( document ).ready(function(){
+    code_shown=false;
+    $('pre.highlight').hide()
+  });
+</script>
+<form action="javascript:code_toggle()"><input type="submit" id="toggleButton" value="Show Code"></form>
+{% endif %}

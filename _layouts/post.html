@@ -6,6 +6,7 @@ layout: default
   <h1>{{ page.title }}</h1>
 
   <div class="entry">
+    {% include codehide_top.html %}
     {{ content }}
   </div>
 
@@ -14,4 +15,6 @@ layout: default
   </div>
 
   {% include disqus.html %}
+  {% include mathjax.html %}
+  {% include codehide_bottom.html %}
 </article>
