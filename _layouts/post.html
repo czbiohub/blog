@@ -3,6 +3,8 @@ layout: default
 ---
 
 <article class="post">
+  {% include codehide_top.html %}
+
   <h1>{{ page.title }}</h1>
 
   <div class="entry">
@@ -14,4 +16,6 @@ layout: default
   </div>
 
   {% include disqus.html %}
+  {% include mathjax.html %}
+  {% include codehide_bottom.html %}
 </article>
