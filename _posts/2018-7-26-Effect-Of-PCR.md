@@ -1,7 +1,13 @@
 ---
 layout: post
+mathjax: true
+codehide: true
 title: The Effect of PCR on scRNA-seq
 ---
+
+One interesting facet of the Tabula Muris data is the fact that we have data from the same samples using two different technologies: microfluidic droplet-based 3’-end counting using the 10x genomics platform, and FACS-based full length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets allow for rapidly profiling thousands of cells, but tend to recover fewer genes per cell and at a lower depth.
+
+Our dataset provides us with the opportunity to compare the advantages of these technologies on a relatively level playing field. For a detailed discussion of this topic, you can check out the [preprint on bioR$\chi$iv](https://www.biorxiv.org/content/early/2018/03/29/237446).
 
 ```python
 import numpy as np
@@ -24,13 +30,6 @@ alt.renderers.register('png', alt.vegalite.v2.display.png_renderer)
 alt.renderers.enable('png')
 ```
 
-## The effect of PCR on scRNA-seq
-
-One interesting facet of the Tabula Muris data is the fact that we have data from the same samples using two different technologies: microfluidic droplet-based 3’-end counting using the 10x genomics platform, and FACS-based full length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets allow for rapidly profiling thousands of cells, at the cost of  This provided us with the opportunity to compare the advantages of these technologies on a relatively level playing field. For a detailed discussion of this topic, you can check out the [preprint on bioR$\chi$iv](https://www.biorxiv.org/content/early/2018/03/29/237446).
-
-We start with a simple question: when looking at cells of the same type using both technologies, how often do we see evidence of any particular gene?
-
-
 ```python
 # read in FACS data
 facs_metadata = pd.read_csv('../../data/TM_facs_metadata.csv', index_col=0, dtype=str)
@@ -49,6 +48,7 @@ facs_thymus.X = np.asarray(facs_thymus.X.todense())
 droplet_thymus.X = np.asarray(droplet_thymus.X.todense())
 ```
 
+We start with a simple question: when looking at cells of the same type using both technologies, how often do we see evidence of any particular gene?
 
 ```python
 alt.hconcat(
