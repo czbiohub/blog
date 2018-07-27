@@ -5,8 +5,4 @@ This is the [Jekyll](https://github.com/jekyll/jekyll) project for the [CZ Biohu
 - Posts can use [MathJax](https://www.mathjax.org/) by putting `mathjax: true` in the header section.
 - Blocks of code can be hidden (showable via a button) with `codehide: true`.
 
-### A note about PRs
-
-Because this is a fork, PRs will default to pointing at the original repository, rather than to our own master branch. So make sure to change the branch when you are submitting a PR, otherwise you will open one against the original Jekyll-Now repo.
-
 For any other info about the framework, check out the Jekyll Now site and [repository](https://github.com/barryclark/jekyll-now).
