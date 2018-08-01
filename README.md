@@ -18,3 +18,7 @@ jupyter nbconvert --to markdown --template path/to/this/repo/jekyll.tpl  YYYY-MM
 ```
 
 Note that your post filename needs to have the correct date format, or Jekyll will not publish it. After converting, move the resulting `.md` file to `_posts` and the folder of images to `images`. Make sure that things look right by running `jekyll serve --future`. If the future flag is not set, posts with upcoming dates will not be displayed on the site.
+
+### Local testing
+
+You can serve a local version of the blog by running `jeckyll serve` in the root directory of this repo, after installing the relevant [dependencies](https://github.com/barryclark/jekyll-now#local-development). An easy workflow is to make a new branch for each post, write and preview it locally, and push it for review. Merge it into master when you're ready for primetime.
