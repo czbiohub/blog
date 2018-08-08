@@ -23,7 +23,7 @@ You can access the data at a few levels of depth:
 
 For some organs, like the Bladder, Diaphragm, and Tongue epithelium, this represents the first large single-cell sequencing study to our knowledge. Tabula Muris is also sex-balanced, in [constrast](https://www.the-scientist.com/?articles.view/articleNo/48616/title/How-Much-Do-Sex-Differences-Matter-in-Mouse-Studies-/) to the majority of murine research. (This bias is so strong that some [studies](http://www.cell.com/action/showMethods?pii=S2405-4712%2816%2930265-4) decline even to state the sex of the mice studied.) It represents the first large single-cell sequencing study of the female murine liver, kidney, and skin to our knowledge.
 
-<img align="right" src="/images/2018-8-10-Introduction/list_of_organs.jpg" width="300" height="300">
+![list of organs](/images/2018-8-10-Introduction/list_of_organs.jpg){:align="right" width="300" height="300"}
 
 One of the challenges of analyzing single-cell sequencing data is the role of batch effects. Tissues from genetically identical mice processed by different labs using different dissociation, library preparation, and sequencing protocols may produce rather different profiles of gene expression. To provide a cross-organ dataset which is as standardized as possible, the mice were processed in a rather delicate ballet: representatives from over a dozen labs (each handling an organ or two) would gather as the mouse was sacrificed, extract their lab's organ, dissociate it, and bring it to a central location for sorting and sequencing.
 
