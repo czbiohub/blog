@@ -5,7 +5,7 @@ This is the [Jekyll](https://github.com/jekyll/jekyll) project for the [CZ Biohu
 - Posts can use [MathJax](https://www.mathjax.org/) by putting `mathjax: true` in the header section.
 - Blocks of code can be hidden (showable via a button) with `codehide: true`.
 
-For any other info about the framework, check out the Jekyll Now site and [repository](https://github.com/barryclark/jekyll-now).
+For any other info about the framework, check out the Jekyll Now site and [repository](https://github.com/barryclark/jekyll-now). In particular, for local development see [here](https://github.com/barryclark/jekyll-now#local-development).
 
 ### Making a post from a Jupyter notebook
 
