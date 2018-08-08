@@ -21,4 +21,4 @@ Note that your post filename needs to have the correct date format, or Jekyll wi
 
 ### Local testing
 
-You can serve a local version of the blog by running `jeckyll serve` in the root directory of this repo, after installing the relevant [dependencies](https://github.com/barryclark/jekyll-now#local-development). An easy workflow is to make a new branch for each post, write and preview it locally, and push it for review. Merge it into master when you're ready for primetime.
+You can serve a local version of the blog by running `jekyll serve` in the root directory of this repo, after installing the relevant [dependencies](https://github.com/barryclark/jekyll-now#local-development). An easy workflow is to make a new branch for each post, write and preview it locally, and push it for review. Merge it into master when you're ready for primetime.
