@@ -5,7 +5,8 @@
 layout: post
 mathjax: true
 codehide: true
-title: {{ (resources['metadata']['name'][11:] or resources['metadata']['name']) | replace("-", " ") }}
+title: {{ resources['metadata']['name'] | replace("-", " ") }}
+date: 3000-01-01
 ---
 {% endblock header %}
 
