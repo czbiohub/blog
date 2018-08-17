@@ -14,10 +14,10 @@ Jupyter's `nbconvert` tool can convert notebooks into nicely-formatted Markdown.
 To remedy those two issues, this repository includes a simple `jekyll.tpl` template which extends `nbconvert`'s `markdown.tpl` and makes the needed tweaks. Once your notebook is ready to be converted to Markdown, run the following:
 
 ```
-jupyter nbconvert --to markdown --template path/to/this/repo/jekyll.tpl  YYYY-MM-DD-Your-Post-Title.ipynb
+jupyter nbconvert --to markdown --template path/to/this/repo/jekyll.tpl  Your-Post-Title.ipynb
 ```
 
-Note that your post filename needs to have the correct date format, or Jekyll will not publish it. After converting, move the resulting `.md` file to `_posts` and the folder of images to `images`. Make sure that things look right by running `jekyll serve --future`. If the future flag is not set, posts with upcoming dates will not be displayed on the site.
+You should add `date: YYYY-MM-DD` to the post's frontmatter. If the date is in the future, Jekyll won't publish it by default: use `jekyll serve --future` to view it locally. After converting, move the resulting `.md` file to `_blog` and the folder of images to `images`.
 
 ### Local testing
 
