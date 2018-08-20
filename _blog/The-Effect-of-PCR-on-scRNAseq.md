@@ -80,12 +80,12 @@ alt.hconcat(
 ![png](/images/The-Effect-of-PCR-on-scRNAseq_files/The-Effect-of-PCR-on-scRNAseq_4_0.png)
 
 
-It's tempting to stare at these plots and start to draw conclusions about the relative merits of droplet- and FACS-based methods. Indeed, in the [initial draft](https://www.biorxiv.org/content/early/2017/12/20/237446) we devoted some time to these types of plots. But differences in methodology mean that the data are not exactly comparable. To illustrate that point, we'll change the axes for these plots, and for each method we'll plot the per-gene fraction of total reads versus the percent of cells with ≥1 read.
+It's tempting to stare at these plots and start to draw conclusions about the relative merits of droplet- and FACS-based methods. Indeed, in the [initial draft](https://www.biorxiv.org/content/early/2017/12/20/237446) we devoted some time to these types of plots, but differences in methodology mean that the data are not exactly comparable. To illustrate that point, we'll change the axes for these plots, and for each method we'll plot the per-gene fraction of total reads versus the percent of cells with ≥1 read.
 
 
 ```python
 
-# reusuable plotting function
+# reusable plotting function
 def plot_expression_v_percent(cell_gene_reads:np.ndarray, title:str):
     cell_gene_nonzero = (cell_gene_reads.sum(0) > 0)
     x = cell_gene_reads[:, cell_gene_nonzero].sum(0) / cell_gene_reads.sum()
