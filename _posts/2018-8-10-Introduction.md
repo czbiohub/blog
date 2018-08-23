@@ -15,6 +15,7 @@ We hope this rich collection of annotated cells will be a useful resource for:
 * Validating findings in future targeted single-cell studies.
 * Developing of methods for integrating datasets (eg between the FACS and droplet experiments), characterizing batch effects, and quantifying the variation of gene expression in many cell types between organs and animals.
 
+## Data access
 You can access the data at a few levels of depth:
 
 * A simple [website](http://tabula-muris.ds.czbiohub.org/) shows the distribution of gene expression in each tissue and cell population.
@@ -25,27 +26,28 @@ For some organs, like the Bladder, Diaphragm, and Tongue epithelium, this repres
 
 ![list of organs](/images/2018-8-10-Introduction/list_of_organs.jpg){:align="right" width="300" height="300"}
 
-One of the challenges of analyzing single-cell sequencing data is the role of batch effects. Tissues from genetically identical mice processed by different labs using different dissociation, library preparation, and sequencing protocols may produce rather different profiles of gene expression. To provide a cross-organ dataset which is as standardized as possible, the mice were processed in a rather delicate ballet: representatives from over a dozen labs (each handling an organ or two) would gather as the mouse was sacrificed, extract their lab's organ, dissociate it, and bring it to a central location for sorting and sequencing.
+## Sample collection
+One of the challenges of analyzing single-cell sequencing data is the role of batch effects. Tissues from genetically identical mice processed by different labs using different dissociation, library preparation, and sequencing protocols may produce rather different profiles of gene expression. To provide a cross-organ dataset which is as standardized as possible, the mice were processed in a rather delicate ballet: representatives from over a dozen labs (each handling one organ or two) would gather as the mouse was sacrificed, extract their lab's organ of speciality, dissociate it, and bring it to the Biohub, a central location for sorting and sequencing.
 
 ![jpg](/images/2018-8-10-Introduction/crowd for organs.jpg)
 *A crowd waits for organs*
 
-The payoff for taking that care can be seen in a TSNE plot of all the FACS-sorted cells together, where cells from different tissues mix together in visible clusters. (In fact, these regions represent common cell types such as epithelial cells, endothelial cells, immune cells, etc.)
+The payoff for taking that much care can be seen in a t-SNE plot of all the FACS-sorted cells together, where common cell types, such as epithelial cells, endothelial cells or immune cells, from different tissues mix together in visible clusters.
 
 ![](/images/2018-8-10-Introduction/facs_tsne_by_tissue.png)
 *TSNE of all FACS-sorted from all organs.*
 
 ## Analysis
 
-Cell type annotation in single-cell sequencing is, at present, a semi-supervised problem. It requires expert knowledge (what marker genes are thought to be uniquely expressed in a given cell type) and high-dimensional data analysis (extracting information from a collection 20,000-dimensional gene expression vectors). To empower the organ experts from each of the collaborating labs to analyze the data they collected and to make the analysis legible to the community at large, we elected to use a relatively simple pipeline as instantiated in the software package Seurat.
+Cell type annotation in single-cell sequencing is, at present, a semi-supervised problem. It requires expert knowledge (which marker genes are thought to be uniquely expressed in a given cell type) and high-dimensional data analysis (extracting information from a collection of 20,000-dimensional gene expression vectors). To empower the organ experts from each of the collaborating labs to analyze the data they collected and to make the analysis legible to the community at large, we elected to use a relatively simple pipeline as instantiated in the R software package **Seurat**.
 
-The pipeline begins with vectors of gene expression in each cell, normalizes the data, selects highly variable genes, reduces their dimension using PCA, then clusters cells based on a nearest-neighbors graph. By inspecting the expression of marker genes (and occasionally computing differentially expressed genes when the markers were not present), researchers were able to identify each cluster. In the case that the profile of gene expression indicated a mixture of populations, they would either tune parameters (like number of PCs ) or subset it and repeat the whole pipeline. To see a worked example, check out the [Organ Annotation Vignette](/files/Organ_Annotation_Vignette.pdf), which also describes all of the mathematical functions and parameter values used. The 33 notebooks used to analyze each tissue and experimental method can be found in [github](https://github.com/czbiohub/tabula-muris/tree/master/00_data_ingest/02_tissue_analysis_rmd).
+The pipeline begins with vectors of gene expression in each cell, normalizes the data, selects highly variable genes, reduces their dimension using PCA and then clusters cells based on a nearest-neighbors graph. By inspecting the expression of marker genes (and occasionally computing differentially expressed genes when the markers were not present), researchers were able to identify each cluster. In the case that the profile of gene expression indicated a mixture of populations, they would either tune parameters (like number of PCs ) or subset it and repeat the whole pipeline. To see a worked example, check out the [Organ Annotation Vignette](/files/Organ_Annotation_Vignette.pdf), which also describes all of the mathematical functions and parameter values used. The 33 notebooks used to analyze each tissue and experimental method can be found in [github](https://github.com/czbiohub/tabula-muris/tree/master/00_data_ingest/02_tissue_analysis_rmd).
 
-Note that this method does not require that one resolve batch effects; it is enough that, within each batch, cells of different types separate. For example, in the limb muscle, there were two clusters of cells (largely from different mice) that were both recognizable by gene expression as satellite cells.
+Note that this approach does not require that one resolves batch effects; it is enough that, within each batch, cells of different types separate. For example, in the limb muscle, there were two clusters of cells (largely from different mice) that were both recognizable by gene expression as satellite cells.
 
 <img src="/images/2018-8-10-Introduction/muscle.png" alt="muscle tsne" width="1500px"/>
 
-To facilitate the reuse of this data, we provide annotations in the controlled vocabulary of a [cell ontology](http://obofoundry.org/ontology/cl.html) from The OBO Foundry. Since definitions of cell types are quickly evolving and ontologies require time to catch up, we also included a free annotation field where arbitrary notes could be added. Those include features like subtypes (luminal progenitor cells in the mammary gland) or localization (periportal hepatocytes).
+To facilitate the reuse of this data, we provide annotations in the controlled vocabulary of a [cell ontology](http://obofoundry.org/ontology/cl.html) from the OBO Foundry. Since definitions of cell types are quickly evolving and ontologies require time to catch up, we also included a free annotation field where arbitrary notes could be added. Those include features like subtypes (luminal progenitor cells in the mammary gland) or localization (periportal hepatocytes).
 
 ## Vignettes
 
