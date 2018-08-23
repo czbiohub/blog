@@ -34,7 +34,7 @@ For some organs, like the Bladder, Diaphragm, and Tongue epithelium, this repres
 ## Sample collection
 One of the challenges of analyzing single-cell sequencing data is the role of batch effects. Tissues from genetically identical mice processed by different labs using different dissociation, library preparation, and sequencing protocols may produce rather different profiles of gene expression. To provide a cross-organ dataset which is as standardized as possible, the mice were processed in a delicate ballet: representatives from over a dozen labs (each handling one organ or two) would gather as the mouse was sacrificed, extract their lab's organ of speciality, dissociate it, and bring it to a central location for sorting and sequencing.
 
-![jpg](/images/Introduction/crowd for organs.jpg)
+![jpg](/images/Introduction/crowd_for_organs.jpg)
 *A crowd waits for organs*
 
 The payoff for taking that much care can be seen in a t-SNE plot of all the FACS-sorted cells together, where common cell types, such as epithelial cells, endothelial cells or immune cells, from different tissues mix together in visible clusters.
