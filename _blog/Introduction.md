@@ -1,7 +1,7 @@
 ---
 layout: post
 mathjax: true
-title: Tabula Muris: A Mouse Single-Cell Transcriptomic Atlas
+title: Tabula Muris&colon; A Mouse Single-Cell Transcriptomic Atlas
 date: 2116-09-21
 ---
 
