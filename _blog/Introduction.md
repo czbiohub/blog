@@ -52,7 +52,7 @@ Note that this approach does not require that one resolves batch effects; it is 
 
 <img src="/images/Introduction/muscle.png" alt="muscle tsne" width="1500px"/>
 
-To facilitate the reuse of this data, we provide annotations in the controlled vocabulary of a [cell ontology](http://obofoundry.org/ontology/cl.html) from the OBO Foundry. Since definitions of cell types are quickly evolving and ontologies require time to catch up, we also included a free annotation field where arbitrary notes could be added. Those include features like subtypes (luminal progenitor cells in the mammary gland) or localization (periportal hepatocytes).
+To facilitate the reuse of this data, we provide annotations in the controlled vocabulary of a [cell ontology](http://obofoundry.org/ontology/cl.html) from The OBO Foundry. Since definitions of cell types are quickly evolving and ontologies require time to catch up, we also included a free annotation field where arbitrary notes could be added. Those include features like subtypes (luminal progenitor cells in the mammary gland) or localization (periportal hepatocytes).
 
 ## Vignettes
 
