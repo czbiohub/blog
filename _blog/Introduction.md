@@ -16,7 +16,7 @@ We hope this rich collection of annotated cells will be a useful resource for:
 * Validating findings in future targeted single-cell studies.
 * Developing of methods for integrating datasets (eg between the FACS and droplet experiments), characterizing batch effects, and quantifying the variation of gene expression in many cell types between organs and animals.
 
-This short post will get you ready to use the data. If you want more story and detail, check out our [paper](www.nature.com/TK) in _Nature_.
+This short post will get you ready to use the data. If you want more story and detail, check out our [paper](https://www.nature.com/TK) in _Nature_.
 
 ## Data access
 
@@ -27,7 +27,7 @@ You can access the data at a few levels of depth:
 * R and Python loading instructions (two lines each!) are in the [easy-data](https://github.com/czi-hca-comp-tools/easy-data/blob/master/datasets/tabula_muris.md#count-files-for-r) repo on Github.
 * The fastq files for each library are available on the [Short Read Archive](https://www.ncbi.nlm.nih.gov/sra/?term=SRP131661).
 
-For some organs, like the Bladder, Diaphragm, and Tongue epithelium, this represents the first large single-cell sequencing study to our knowledge. Tabula Muris is also sex-balanced, in [constrast](https://www.the-scientist.com/?articles.view/articleNo/48616/title/How-Much-Do-Sex-Differences-Matter-in-Mouse-Studies-/) to the majority of murine research. (This bias is so strong that some [studies](http://www.cell.com/action/showMethods?pii=S2405-4712%2816%2930265-4) decline even to state the sex of the mice studied.) It represents the first large single-cell sequencing study of the female murine liver, kidney, and skin.
+For some organs, like the Bladder, Diaphragm, and Tongue epithelium, this represents the first large single-cell sequencing study to our knowledge. Tabula Muris is also sex-balanced, in [constrast](https://www.the-scientist.com/?articles.view/articleNo/48616/title/How-Much-Do-Sex-Differences-Matter-in-Mouse-Studies-/) to the majority of murine research. (This bias is so strong that some [studies](https://www.cell.com/action/showMethods?pii=S2405-4712%2816%2930265-4) decline even to state the sex of the mice studied.) It represents the first large single-cell sequencing study of the female murine liver, kidney, and skin.
 
 ![list of organs](/images/Introduction/list_of_organs.jpg){:align="right" width="300" height="300"}
 
