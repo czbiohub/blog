@@ -4,12 +4,8 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+This is the blog of the data science team at the [Chan Zuckerberg Biohub](https://www.czbiohub.org).
 
 ### More Information
 
-A place to include any other types of information that you'd like to include about yourself.
-
-### Contact me
-
-[email@domain.com](mailto:email@domain.com)
+We'll use this space to share news about ongoing research, discuss of interesting research topics, and anything else that we feel like telling the world.
