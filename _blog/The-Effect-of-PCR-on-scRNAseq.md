@@ -3,7 +3,7 @@ layout: post
 mathjax: true
 codehide: true
 title: The Effect of PCR on scRNAseq
-date: 2018-08-23
+date: 2018-09-06
 ---
 
 One interesting facet of the Tabula Muris data is the fact that we have data from the same samples using two different technologies: microfluidic droplet-based 3’-end counting using the 10x genomics platform, and FACS-based full-length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets let us rapidly profile thousands of cells, but Smart-Seq2 tends to recover more genes per cell and can be sequenced to higher depth.
