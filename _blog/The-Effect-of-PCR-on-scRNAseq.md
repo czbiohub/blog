@@ -116,7 +116,7 @@ There must be an additional source of noise, and the obvious suspect is the [PCR
 
 We're going to build a [generative model](https://en.wikipedia.org/wiki/Generative_model) of our data, in the hope that we can then understand what's going on in the real data. We'll criminally over-simplify the amount of labwork involved by summarizing single-cell RNA-seq into the following steps:
 
-[figure]?
+![svg](/images/The-Effect-of-PCR-on-scRNAseq_files/scrna_sampling.svg)
 
  1. Cells are **isolated** into wells or droplets
  2. They are lysed, individual mRNA molecules are biochemically **captured** and reverse-transcribed to cDNA
