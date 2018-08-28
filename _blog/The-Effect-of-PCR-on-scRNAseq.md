@@ -237,7 +237,7 @@ That is: in each round of PCR, each of the existing reads is copied with a proba
 
 
 ```python
-# PCR noise model: every fragment has an affinity for PCR, and every round we do a ~binomial doubling
+# PCR noise model: every read has an affinity for PCR, and every round we do a ~binomial doubling
 def pcr_noise(read_counts:np.ndarray, pcr_betas:np.ndarray, n:int):
     read_counts = read_counts.copy()
     # for each round of pcr, each gene increases according to its affinity factor
@@ -273,7 +273,7 @@ There is one piece missing from this plot, however, which is the "shadow" of the
 
 
 ```python
-# a bimodel distribution for pcr efficiency: most fragments around 0.6-0.7 but with spike near 0.
+# a bimodal distribution for pcr efficiency: most fragments around 0.6-0.7 but with spike near 0.
 pcr_betas = np.vstack((np.random.beta(1, 20, size=n_genes),
                        np.random.beta(6, 4, size=n_genes)))[
     (np.random.random(size=n_genes) > 0.1).astype(int), np.arange(n_genes)
