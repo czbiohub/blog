@@ -16,7 +16,7 @@ We hope this rich collection of annotated cells will be a useful resource for:
 * Validating findings in future targeted single-cell studies.
 * Developing of methods for integrating datasets (eg between the FACS and droplet experiments), characterizing batch effects, and quantifying the variation of gene expression in many cell types between organs and animals.
 
-This short post will get you ready to use the data. If you want more story and detail, check out our [paper](https://www.nature.com/TK) in _Nature_.
+This short post will get you ready to use the data. If you want more story and detail, check out our [paper](https://doi.org/10.1038/s41586-018-0590-4) in _Nature_.
 
 ## Data access
 
