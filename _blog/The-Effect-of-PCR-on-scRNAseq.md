@@ -3,12 +3,12 @@ layout: post
 mathjax: true
 codehide: true
 title: The Effect of PCR on scRNAseq
-date: 2018-09-06
+date: 2018-10-10
 ---
 
 One interesting facet of the Tabula Muris data is the fact that we have data from the same samples using two different technologies: microfluidic droplet-based 3’-end counting using the 10x genomics platform, and FACS-based full-length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets let us rapidly profile thousands of cells, but Smart-Seq2 tends to recover more genes per cell and can be sequenced to higher depth.
 
-Our dataset provides us with the opportunity to compare the advantages of these technologies on a relatively level playing field. For a detailed discussion of this topic, you can check out the [preprint on bioR$\chi$iv](https://www.biorxiv.org/content/early/2018/03/29/237446).
+Our dataset provides us with the opportunity to compare the advantages of these technologies on a relatively level playing field. For a detailed discussion of this topic, you can check out the [paper](https://doi.org/10.1038/s41586-018-0590-4).
 
 
 ```python
@@ -120,7 +120,7 @@ We're going to build a [generative model](https://en.wikipedia.org/wiki/Generati
 
  1. Cells are **isolated** into wells or droplets
  2. They are lysed, individual mRNA molecules are biochemically **captured** and reverse-transcribed to cDNA
-     - in the droplet method, this is where UMIs are introduced
+     - When using the droplet method, this is where UMIs are introduced
  3. The cDNA is **PCR amplified, fragmented, and amplified again** as part of library preparation
  4. The amplified library is **sequenced**, demultiplexed, aligned, etc.
 
