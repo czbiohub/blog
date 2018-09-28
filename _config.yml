@@ -60,6 +60,9 @@ collections:
     output: true
     permalink: /:title/
 
+# don't publish things that in the future
+future: false
+
 # The release of Jekyll Now that you're using
 version: v1.2.0
 
