@@ -1,6 +1,9 @@
 {% if page.codehide %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script>
+  // Javascript code-hiding thanks to Chris Said
+  // http://chris-said.io/2016/02/13/how-to-make-polished-jupyter-presentations-with-optional-code-visibility/
+
   function code_toggle() {
     if (code_shown){
       $('pre.highlight').hide('500');

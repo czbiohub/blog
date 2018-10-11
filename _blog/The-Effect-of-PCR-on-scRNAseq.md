@@ -4,6 +4,7 @@ mathjax: true
 codehide: true
 title: The Effect of PCR on scRNAseq
 date: 2018-10-12
+author: James Webber
 ---
 
 In the Tabula Muris study, we performed single-cell RNA sequencing on tissues from multiple mice using two different technologies: microfluidic droplet-based 3’-end counting on the 10x genomics platform, and FACS-based full-length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets let us easily profile thousands of cells while Smart-Seq2 recovers more genes per cell and provides full-length transcripts.
@@ -308,7 +309,7 @@ This plot doesn't look exactly like the thymus data, but our model is still pret
 
 Our hypothesis is that PCR amplification bias can explain the difference between the droplet and FACS plots we saw earlier. PCR amplifies the observed level of each gene, throwing off our estimation of the expected dropout rate. Furthermore, each gene goes through PCR with a different level of efficiency, which adds noise to the measured gene counts.
 
-Let's build a model for this process. We can use a [beta distribution](https://en.wikipedia.org/wiki/Beta_distribution) to generate different levels of PCR efficiency for each gene. Then we represent the PCR amplification as a series of probabilistic doublings, with each gene increasing in abundance according to the number of existing copies and its PCR efficiency rate. If $PCR_{i}(j)$ is the number of reads for gene $i$ after PCR round $j$, and gene $i$ has a PCR efficency $b_i \sim \beta$, then
+Let's build a model for this process. We can use a [beta distribution](https://en.wikipedia.org/wiki/Beta_distribution) to generate different levels of PCR efficiency for each gene. Then we represent the PCR amplification as a series of probabilistic doublings, with each gene increasing in abundance according to the number of existing copies and its PCR efficiency rate. If $PCR_{i}(j)$ is the number of reads for gene $i$ after PCR round $j$, and gene $i$ has a PCR efficiency $b_i \sim \beta$, then
  
 
 $$ PCR_{i}(j+1) = PCR_{i}(j) + \mathrm{Binom}(PCR_{i}(j), b_i).$$
@@ -486,7 +487,7 @@ alt.hconcat(
 ![png](/images/The-Effect-of-PCR-on-scRNAseq_files/The-Effect-of-PCR-on-scRNAseq_8.png)
 
 
-Without using UMIs to deduplicate the read data, we see a very similar story to the plot of FACS data up above, consistent with our model of how PCR bias can add noise to read counts. Of note, the cloud of amplified reads is not shifted so far to the right as it was in the plot of FACS data. While both protocols have about the same number of PCR cycles, it appears that the efficiency of PCR in the 10X library is somewhat lower overall: 20-30x amplification rather than the >100x amplification in the FACS data. Those numbers suggest that PCR is somewhere around 30% efficient in the 10X library and 50-60% efficient in the SmartSeq2 protocol. However, the analysis above shows that higher efficiency is not necessarily desirable&mdash;variation in efficiency leads to a lot of noise in gene counts, and in the absence of UMIs this can make analysis more challenging. When UMIs are present, higher amplification will just reduce the effective depth of the library.
+Without using UMIs to deduplicate the read data, we see a very similar story to the plot of FACS data up above, consistent with our model of how PCR bias can add noise to read counts. Of note, the cloud of amplified reads is not shifted so far to the right as it was in the plot of FACS data. While both protocols have about the same number of PCR cycles, it appears that the efficiency of PCR in the 10X library is somewhat lower overall: 20-30x amplification rather than the >100x amplification in the FACS data. Those numbers suggest that PCR is somewhere around 30% efficient in the 10X library and 50-60% efficient in the Smart-Seq2 protocol. However, the analysis above shows that higher efficiency is not necessarily desirable&mdash;variation in efficiency leads to a lot of noise in gene counts, and in the absence of UMIs this can make analysis more challenging. When UMIs are present, higher amplification will just reduce the effective depth of the library.
 
 Now that we have an equivalent plot for the droplet data, we can identify genes on the low-efficiency line in both datasets and see if there's any overlap.
 
@@ -559,13 +560,13 @@ low_in_droplets = droplet_low_g.sum()
 intersection = (facs_low_g & droplet_low_g).sum()
 hypergeom_p = st.hypergeom.sf(intersection, n_genes, low_in_facs, low_in_droplets)
 
-print("\t".join(f"{c:>19}" for c in ("n_genes", "low in facs", "low in droplets",
+print("\t".join(f"{c:>19}" for c in ("n_genes", "low in FACS", "low in droplets",
                                      "intersection", "hypergeometric test")))
 print("\t".join(f"{c:>19}" for c in (n_genes, low_in_facs, low_in_droplets,
                                      intersection, f"""{hypergeom_p:.3g}""")))
 ```
 
-| n_genes | low in facs | low in droplets | intersection | hypergeometric test |
+| n_genes | low in FACS | low in droplets | intersection | hypergeometric test |
 | -------:|------------:|----------------:|-------------:|--------------------:|
 |   23433 |        3036 |             629 |          158 |            2.01e-17 |
 
