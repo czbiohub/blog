@@ -6,7 +6,7 @@ title: The Effect of PCR on scRNAseq
 date: 2018-10-12
 ---
 
-In the Tabula Muris study, we performed single-cell RNA sequencing on tissues from many mice using two different technologies: microfluidic droplet-based 3’-end counting on the 10x genomics platform, and FACS-based full-length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets let us easily profile thousands of cells while Smart-Seq2 recovers more genes per cell and provides full-length transcripts.
+In the Tabula Muris study, we performed single-cell RNA sequencing on tissues from multiple mice using two different technologies: microfluidic droplet-based 3’-end counting on the 10x genomics platform, and FACS-based full-length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets let us easily profile thousands of cells while Smart-Seq2 recovers more genes per cell and provides full-length transcripts.
 
 This provides us with an opportunity to compare the views of gene expression provided by these two technologies on cells from the same mice. For a comprehensive discussion of this topic, you can check out the [paper](https://doi.org/10.1038/s41586-018-0590-4). In this post we'll try to get a quantitative understanding of the processes that generate single-cell sequencing data by comparing simulations to the experimental data.
 
