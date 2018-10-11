@@ -6,9 +6,9 @@ title: The Effect of PCR on scRNAseq
 date: 2018-10-12
 ---
 
-One interesting facet of the Tabula Muris data is the fact that we have data from the same samples using two different technologies: microfluidic droplet-based 3’-end counting using the 10x genomics platform, and FACS-based full-length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets let us rapidly profile thousands of cells, but Smart-Seq2 tends to recover more genes per cell and can be sequenced to higher depth.
+In the Tabula Muris study, we performed single-cell RNA sequencing on tissues from many mice using two different technologies: microfluidic droplet-based 3’-end counting on the 10x genomics platform, and FACS-based full-length transcript analysis with Smart-Seq2. Both platforms have advantages: droplets let us easily profile thousands of cells while Smart-Seq2 recovers more genes per cell and provides full-length transcripts.
 
-Our dataset provides us with the opportunity to compare the advantages of these technologies on a relatively level playing field. For a more comprehensive discussion of this topic, you can check out the [paper](https://doi.org/10.1038/s41586-018-0590-4). In this post we'll delve a little deeper into one particular question and see what it can teach us about how the data are generated.
+This provides us with an opportunity to compare the views of gene expression provided by these two technologies on cells from the same mice. For a comprehensive discussion of this topic, you can check out the [paper](https://doi.org/10.1038/s41586-018-0590-4). In this post we'll try to get a quantitative understanding of the processes that generate single-cell sequencing data by comparing simulations to the experimental data.
 
 
 ```python
@@ -37,7 +37,7 @@ droplet_metadata = pd.read_csv("../../data/TM_droplet_metadata.csv", index_col=0
 droplet_data = ad.read_h5ad("../../data/TM_droplet_mat.h5ad")
 ```
 
-The broad question is whether these two technologies are giving us the same view of gene expression. It's not obvious how to answer that question, but let's start by looking at the cells from one organ sequenced by both platforms, and compare the gene levels we observe. For the rest of this post we're going to look at the thymus.
+Let's start by looking at the cells from one organ sequenced on both platforms, and compare the gene levels we observe. For the rest of this post we're going to look at the thymus.
 
 
 ```python
@@ -50,7 +50,7 @@ facs_thymus.X = np.asarray(facs_thymus.X.todense())
 droplet_thymus.X = np.asarray(droplet_thymus.X.todense())
 ```
 
-Below we'll plot two different visualizations of these datasets. On the left, we'll plot the relative gene counts of each method&mdash;for each gene, is the observed level similar between the FACS and droplet datasets? On the right, for each gene we'll plot the percent of cells with ≥1 read, reflecting the idea that while expression _level_ might not be consistent, we hope to see the same genes present in a similar fraction of cells in both of these populations.
+Below we plot two different visualizations of gene expression. On the left, we compare the "bulk" expression levels; for each gene, the x-axis represents the fraction of counts mapping to that gene in FACS and the y-axis represents the fraction in droplets. On the right, we compare the percent of cells with ≥1 read, reflecting the idea that while expression _level_ might be noisy due to differences in chemistry, the same genes should be present in a similar fraction of cells in both of these samples.
 
 
 ```python
@@ -63,6 +63,12 @@ thymus_dataframe = pd.DataFrame(
     }
 )
 
+xy_line = (
+    alt.Chart(pd.DataFrame({"x": [1e-8, 1], "y": [1e-8, 1]}))
+    .mark_line(opacity=0.3, color="black", strokeDash=[4])
+    .encode(x="x", y="y")
+)
+
 alt.hconcat(
     alt.Chart(
         thymus_dataframe, title="Fraction of total reads", width=400, height=400
@@ -73,13 +79,15 @@ alt.hconcat(
             "FACS_frac",
             type="quantitative",
             scale=alt.Scale(type="log", domain=(1e-10, 1)),
+            axis=alt.Axis(title="Fraction of total reads (FACS)"),
         ),
         y=alt.Y(
             "Droplet_frac",
             type="quantitative",
             scale=alt.Scale(type="log", domain=(1e-8, 1)),
+            axis=alt.Axis(title="Fraction of total UMIs (droplet)"),
         ),
-    ),
+    ) + xy_line,
     alt.Chart(
         thymus_dataframe, title="Percent of cells with ≥ 1 read", width=400, height=400
     )
@@ -88,16 +96,16 @@ alt.hconcat(
         x=alt.X(
             "FACS_pct",
             type="quantitative",
-            axis=alt.Axis(format="%"),
+            axis=alt.Axis(format="%", title="Percent of cells with ≥1 read (FACS)"),
             scale=alt.Scale(domain=(0, 1)),
         ),
         y=alt.Y(
             "Droplet_pct",
             type="quantitative",
-            axis=alt.Axis(format="%"),
+            axis=alt.Axis(format="%", title="Percent of cells with ≥1 UMI (droplet)"),
             scale=alt.Scale(domain=(0, 1)),
         ),
-    ),
+    ) + xy_line,
 )
 ```
 
@@ -106,7 +114,7 @@ alt.hconcat(
 ![png](/images/The-Effect-of-PCR-on-scRNAseq_files/The-Effect-of-PCR-on-scRNAseq_0.png)
 
 
-It's tempting to stare at these plots and start to draw conclusions about the relative merits of droplet- and FACS-based methods. Indeed, in the [initial draft](https://www.biorxiv.org/content/early/2017/12/20/237446) we devoted some time to these types of plots, but they are difficult to interpret. On the left, it seems like the gene levels are mostly in agreement but there are many exceptions. On the right, the bulk of the genes are slightly above the diagonal, but many genes are on the x axis. That means they were almost never observed in the droplet data but often seen in the FACS data.
+It's tempting to stare at these plots and start to draw conclusions about the relative merits of droplet- and FACS-based methods. Indeed, we did so in the [initial draft](https://www.biorxiv.org/content/early/2017/12/20/237446), but interpretation proved difficult. On the left, it seems like the gene levels are mostly in agreement (spread around the $y = x$ line) but there are many exceptions, with genes present at the 1% level in FACS that are entirely absent in droplets. On the right, the bulk of the genes are slightly above the diagonal (present in a larger fraction of cells in droplets than in FACS), but many genes are on the x-axis. That means they were almost never observed in the droplet data but often seen in the FACS data. Confusingly, in other cell types the majority of genes are _below_ the diagonal, indicating they are more often found in the FACS data.
 
 It seems likely that differences in methodology are confounding our attempt to compare methods. To illustrate that point, we'll switch around the axes for these plots, and for each method we'll plot the per-gene fraction of total reads versus the percent of cells with ≥1 read.
 
@@ -154,11 +162,11 @@ alt.hconcat(
 ![png](/images/The-Effect-of-PCR-on-scRNAseq_files/The-Effect-of-PCR-on-scRNAseq_1.png)
 
 
-The difference between these plots is pretty striking. In the droplet data on the left, the relationship between expression and dropout looks like something we can model: genes that are highly expressed are more likely to be observed in every cell, while low-expression genes are seen less often. This relationship is what we would expect from a Poisson distribution, with the addition of noise due to variation in library depth and expression variation. If we model these sources of variation as a [gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution) then the resulting model for observed counts is a [negative binomial](http://www.nxn.se/valent/2018/1/30/count-depth-variation-makes-poisson-scrna-seq-data-negative-binomial). Deviations from that model are a sign of heterogeneity in gene expression, which suggests a method for suggesting variable genes for analysis. Tallulah Andrews and Martin Hemberg describe such a method in [their paper](https://www.biorxiv.org/content/early/2018/05/17/065094) on bioR$\chi$iv.
+The difference between these plots is pretty striking. In the droplet data on the left, the relationship between expression and dropout looks like something we can model: genes that are highly expressed are more likely to be observed in every cell, while low-expression genes are seen less often. This relationship is what we would expect from a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution), with a little additional noise due to variation in library depth and gene expression. If we model these sources of variation as a [gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution) then the resulting model for observed counts is a [negative binomial](http://www.nxn.se/valent/2018/1/30/count-depth-variation-makes-poisson-scrna-seq-data-negative-binomial). Deviations from that model are a sign of heterogeneity in gene expression&mdash;perhaps indicating a mixture of cell types or cell states. This suggests a method for finding variable genes; Tallulah Andrews and Martin Hemberg describe such a method in [their paper](https://www.biorxiv.org/content/early/2018/05/17/065094) on bioR$\chi$iv.
 
-The second plot is more confusing. The same trend is apparent but the points are much more spread out and cloudier compared to the data from the droplets. We see a faint echo of the droplet curve on the left side of the plot, but most of the points are further to the right. If we assumed a negative binomial for these data we would identify a huge number of genes as variable, but we know this population of cells is relatively homogenous (probably as homogenous as the cells in the droplet data).
+The second plot is more confusing. The same trend is apparent but the points are much more spread out and cloudier compared to the data from droplets. We see a faint echo of the droplet curve on the left side of the plot, but most of the points are further to the right. If we assumed a negative binomial for these data we would identify a huge number of genes as variable, but we know this population of cells is relatively homogenous (probably as homogenous as the cells in the droplet data).
 
-There must be an additional source of noise, and the obvious suspect is the [PCR](https://en.wikipedia.org/wiki/Polymerase_chain_reaction) amplification during library preparation. The droplet data has unique molecular identifiers (UMIs) that allow us to remove this noise, while the FACS data does not, and the result is what we see. One way to test this idea is to model how we think the data are generated and see if we can reproduce these results.
+There must be an additional source of noise, and the obvious suspect is the [PCR](https://en.wikipedia.org/wiki/Polymerase_chain_reaction) amplification during library preparation. The droplet data has unique molecular identifiers (UMIs) that removed this noise, while the FACS data does not, and the result is what we see. One way to test this idea is to model how we think the data are generated and see if we can reproduce these trends.
 
 ## What are we measuring? scRNA-seq as a sampling process
 
@@ -166,22 +174,21 @@ We're going to build a [generative model](https://en.wikipedia.org/wiki/Generati
 
 ![svg](/images/The-Effect-of-PCR-on-scRNAseq_files/scrna_sampling.svg)
 
- 1. Cells are **isolated** into wells or droplets
- 2. They are lysed, individual mRNA molecules are biochemically **captured** and reverse-transcribed to cDNA
-     - in the droplet method, this is where UMIs are introduced
- 3. The cDNA is **PCR amplified, fragmented, and amplified again** as part of library preparation
+ 1. Cells are **isolated** into wells or droplets.
+ 2. They are lysed, and individual mRNA molecules are biochemically **captured** and reverse-transcribed to cDNA. In the droplet method, this is where UMIs are introduced.
+ 3. The cDNA is **PCR amplified, fragmented, and amplified again** as part of library preparation.
  4. The amplified library is **sequenced**, demultiplexed, aligned, etc.
 
 We can think of each of the bolded portions as a sampling step. In step 1, the cells are sampled from a population that contains an unknown amount of diversity, and our collection methods may have different biases at this step. In step 2, individual mRNA molecules are captured with some efficiency that is dependent on the biochemical method and potentially the cell state or even the gene sequence itself. Step 3 can be broken down into many *different* sampling steps, one for each round of PCR, as individual molecules are amplified at different rates of efficiency.
 
-All of these sampling steps are important to think about for experimental design and interpretation. Here we are going to keep steps 1, 2, and 4 constant, by assuming a homogenous cell population, random capture and random sequencing: we will only examine the effect of step 3. Specifically: how does a potentially-biased PCR process affect the final gene count? We'll start by simulating some data.
+All of these sampling steps are important to think about for experimental design and interpretation. Here we are going to keep steps 1, 2, and 4 constant, by assuming a homogenous cell population, unbiased random capture, and unbiased sequencing: we will only examine the effect of step 3. Specifically: how does a potentially-biased PCR process affect the final gene count? We'll start by simulating some data.
 
- 1. We have 20,000 genes and 2,000 cells
- 2. Genes are expressed according to a log-gamma distribution
-     - Formally: $g_i \sim e^{\Gamma(k=2,\ \theta=1)}$ where $k, \theta$ were chosen by eye to mimic realistic data
-     - There isn't a strong basis for this distribution except that log-normal looked to be skewed a bit high
- 3. Every cell has the same expression state
- 4. We'll sample 5,500 UMIs from every cell using a multinomial distribution
+ 1. We have 20,000 genes and 2,000 cells.
+ 2. Genes are expressed according to a log-gamma distribution.
+     - Formally: $g_i \sim e^{\Gamma(k=4,\ \theta=1)}$ where $k, \theta$ were chosen by eye to mimic realistic data.
+     - There isn't a strong basis for this distribution except that log-normal looked to be skewed a bit high.
+ 3. Every cell has the same expression state.
+ 4. We sample 5,500 UMIs from every cell using a multinomial distribution.
      - Technically the [multivariate hypergeometric](https://en.wikipedia.org/wiki/Hypergeometric_distribution#Multivariate_hypergeometric_distribution) is the right distribution here, but it is difficult to implement efficiently and the multinomial has almost identical behavior at this scale.
 
 
@@ -213,14 +220,7 @@ plot_expression_v_percent(cell_gene_umis, title="Basic model")
 
 ![png](/images/The-Effect-of-PCR-on-scRNAseq_files/The-Effect-of-PCR-on-scRNAseq_2.png)
 
-
-This looks promising! When we consider a specific gene, our sampling process is a [binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution) $X \sim B(n, p)$ with $n$ equal to the number of reads from that cell and $p$ equal to the relative abundance of that gene in the cell. When $n$ is large and $p$ is small, a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution) is a good approximation for this process, which is why most people refer to scRNA gene counts (assuming no variation between cells) as being [Poisson-distributed](http://www.nxn.se/valent/2018/1/30/count-depth-variation-makes-poisson-scrna-seq-data-negative-binomial). Seeing a particular gene $g$ in a cell is based on the depth of the library and the gene's relative expression, and the probability of seeing $k$ reads is given by:
-
-$$ P_g(k\textrm{ reads}) = \frac{\lambda^k e^{-\lambda}}{k!}\hspace{40pt}\lambda = \frac{[\textrm{expression of }g]}{\textrm{[total expression]}} \times \textrm{[number of reads]} $$
-
-When we are counting the prevalence of missing genes, this simplifies to $ P_g(k=0) = e^{-\lambda}$ and the plot above shows the complement, $ P_g(k>0) = 1 - e^{-\lambda}$
-
-The plot above looks very similar to our droplet data, but it's much cleaner. There are two reasons for that: one is that we simulated identical cells, and the second is that we simulated identical library sizes. We can vary each of these assumptions in turn and see what happens to our data.
+The plot above looks very similar to our droplet data, but it's much cleaner[^1]. There are two reasons for that: one is that we simulated identical cells, and the second is that we simulated identical library sizes. We can vary each of these assumptions in turn and see what happens to our data.
 
 
 ```python
@@ -272,7 +272,7 @@ alt.hconcat(*cs)
 ![png](/images/The-Effect-of-PCR-on-scRNAseq_files/The-Effect-of-PCR-on-scRNAseq_3.png)
 
 
-These plots are useful for gaining an intuition about how noise in our data affects the result. There is a clear difference between these two effects: noise in the size of the library makes the Poisson-derived curve slightly "fuzzier", but it also raises the bottom end of the distribution because the cells with high coverage are able to recover rare genes. Noise in the gene expression lowers the top line and spreads out the distribution, because genes are less evenly distributed and so they are found in fewer cells than would be expected based on average expression. In reality we tend to see a combination of these two effects. For this post we'll just eyeball some parameters that look like the droplet data.
+These plots are useful for gaining an intuition about how noise in the generative process affects the data. There is a clear difference between these two effects: noise in the size of the library makes the Poisson-derived curve slightly "fuzzier", but it also raises the bottom end of the distribution because the cells with high coverage are able to recover rare genes. Noise in the gene expression lowers the top line and spreads out the distribution, because genes are less evenly distributed and so they are found in fewer cells than would be expected based on average expression. In reality we tend to see a combination of these two effects. For this post we'll just eyeball some parameters that look like the droplet data.
 
 
 ```python
@@ -302,18 +302,16 @@ plot_expression_v_percent(noisy_umis, title=f"Library, Expression Noise: 1.5")
 ![png](/images/The-Effect-of-PCR-on-scRNAseq_files/The-Effect-of-PCR-on-scRNAseq_4.png)
 
 
-This plot looks okay. It doesn't look exactly like the thymus data, but our model is still pretty simple in comparison to real tissue. In particular, we are explicitly simulating a single population, while the real data contains at least three cell types and possibly more that we don't have the resolution to identify.
+This plot doesn't look exactly like the thymus data, but our model is still pretty simple in comparison to real tissue. In particular, we are explicitly simulating a single population, while the real data contains at least three cell types and possibly more that we don't have the resolution to identify.
 
 ### Simulating PCR
 
-Our hypothesis is that PCR amplification bias can explain the different between the droplet and FACS plots we saw earlier. PCR amplifies the observed level of each gene, throwing off our estimation of the expected dropout rate. Furthermore, each gene goes through PCR with a different level of efficiency, which adds noise to the measured gene counts.
+Our hypothesis is that PCR amplification bias can explain the difference between the droplet and FACS plots we saw earlier. PCR amplifies the observed level of each gene, throwing off our estimation of the expected dropout rate. Furthermore, each gene goes through PCR with a different level of efficiency, which adds noise to the measured gene counts.
 
-Let's build a model for this process. We can use a [beta distribution](https://en.wikipedia.org/wiki/Beta_distribution) to generate different levels of PCR efficiency on a per-gene basis. Then we represent the PCR amplication as a series of probabilistic doublings, with each gene increasing in abundance according to the number of existing copies and its PCR efficiency rate. If $PCR_{i}(\ j\ )$ is the number of reads for gene $i$ after PCR round $j$, and gene $i$ has a PCR efficency $b_i \sim \beta$, then
+Let's build a model for this process. We can use a [beta distribution](https://en.wikipedia.org/wiki/Beta_distribution) to generate different levels of PCR efficiency for each gene. Then we represent the PCR amplification as a series of probabilistic doublings, with each gene increasing in abundance according to the number of existing copies and its PCR efficiency rate. If $PCR_{i}(j)$ is the number of reads for gene $i$ after PCR round $j$, and gene $i$ has a PCR efficency $b_i \sim \beta$, then
  
-$$ PCR_{i}(\ j+1\ ) = PCR_{i}(\ j\ ) + \mathrm{Binom}(PCR_{i}(\ j\ ), b_i)$$
 
-That is: in each round of PCR, each of the existing reads is copied with a probability that is specific to the gene it came from.
-
+$$ PCR_{i}(j+1) = PCR_{i}(j) + \mathrm{Binom}(PCR_{i}(j), b_i).$$
 
 ```python
 # PCR noise model: every fragment has an affinity for PCR, and every round we do a ~binomial doubling
@@ -355,7 +353,7 @@ alt.hconcat(
 
 This is getting closer to the FACS plot above&mdash;using a distribution of PCR efficiencies causes the read data to spread across a few orders of magnitude. As we go through 13 rounds of PCR the high efficiency genes shift to the right while the lower ones lag behind. The right edge of the curve is fairly sharp, as nothing can replicate more efficiently than once per round.
 
-There is one piece missing from this plot, however, which is the "shadow" of the UMI curve that we could see on the left side. Our intuition from the model so far is that these points are not being amplified very much at all. One way to get more low-efficiency genes would be to use a wider beta distribution (with more density near zero), but it actually looks like there is a small subpopulation with very low efficiency that is separate from the rest. We can model this with a mixture of two beta distributions, although it's unclear why that should be the case. Those of you with more experience troubleshooting PCR can tell us if this seems like a reasonable distribution of efficiency across random DNA sequences.
+There is one piece missing from this plot, however, which is the "shadow" of the UMI curve that we could see on the left side. Our intuition from the model so far is that these points are not being amplified very much at all. One way to get more low-efficiency genes would be to use a wider beta distribution (with more density near zero), but it actually looks like there is a small subpopulation with very low efficiency that is separate from the rest. We can model this with a mixture of two beta distributions, although it's unclear why that should be the case. Those of you with more experience troubleshooting PCR can tell us if this seems like a reasonable distribution of efficiency across different DNA sequences.
 
 
 ```python
@@ -381,7 +379,7 @@ alt.hconcat(
 
 This looks pretty good, but when we compare it to our data it's still not quite right. The bimodal distribution gave us a subpopulation of points on the left side of the plot, but it didn't give us the relationship between expression and PCR efficiency that we can see in the FACS data. We could reproduce that relationship in a hacky way, by setting a random subset of low-expression genes to have low PCR efficiency. But that wouldn't be very satisfying&mdash;there's no reason that the PCR reaction should care about the expression level of the genes.
 
-However, there's another factor that we haven't considered yet. When we do scRNA-seq we aren't sequencing complete gene transcripts, we're sequencing _fragments_. The number of different fragments we see from a gene will depend on its expression level, because a highly-expressed gene will be sampled more often and so we are more likely to see multiple different fragments. A gene with low expression could potentially be represented by a single fragment, and if that fragment has poor PCR efficiency, it would remain on the UMI curve, leaving us the "shadow" that we expected. We can try this out by changing our model to work on gene fragments rather than genes. Most of it is the same, but in the beginning we add a step of generating a random number of fragments for each gene (Poisson distributed) and later we assign each _fragment_ its own PCR efficiency. We'll show the results of both the UMI distribution and the PCR-amplified version.
+However, there's another factor that we haven't considered yet. When we do scRNA-seq we aren't sequencing complete gene transcripts, we're sequencing _fragments_. The number of distinct fragments we see from a gene will depend on its expression level, because a highly-expressed gene will be sampled more often. A single fragment might be all that we capture from a gene with low expression. If that fragment has poor PCR efficiency, that gene would remain on the UMI curve, part of the "shadow" that we expect. We can try this out by changing our model to work on gene fragments rather than genes. We add a step at the beginning, generating a random number of fragments for each gene (Poisson distributed) and assigning each _fragment_ its own PCR efficiency. We'll show the results of both the UMI distribution and the PCR-amplified version.
 
 
 ```python
@@ -433,7 +431,7 @@ alt.hconcat(
 ![png](/images/The-Effect-of-PCR-on-scRNAseq_files/The-Effect-of-PCR-on-scRNAseq_7.png)
 
 
-Now that's more like it! We have most of the characteristics of the plot we generated from real data, up to some biological noise and parameter tweaks (in particular I'm still unsatistified with the distribution of gene expression levels). The addition of gene fragments didn't change how our model behaves on UMI data, but it allowed us to reproduce the "shadow" of the UMI curve for low-expression genes.
+Now that's more like it! We have most of the characteristics of the plot we generated from real data, up to some biological noise and parameter tweaks. The addition of gene fragments didn't change how our model behaves on UMI data, but it allowed us to reproduce the "shadow" of the UMI curve for low-expression genes.
 
 To close the loop on this post, we'll look at what our droplet data would be if we didn't collapse reads via the UMIs. To do this, we needed to parse the BAM file that is output by CellRanger. For those following along at home, be warned that it takes a _long_ time to read through the entire BAM file.
 
@@ -442,7 +440,7 @@ To close the loop on this post, we'll look at what our droplet data would be if 
 # we'll need the pysam library to read the bam file
 import pysam
 
-# # dictionaries that let us index into the read matrix by barcode and gene
+# dictionaries that let us index into the read matrix by barcode and gene
 bc_i = {
     bc: i
     for i, bc in enumerate(
@@ -572,17 +570,17 @@ print("\t".join(f"{c:>19}" for c in (n_genes, low_in_facs, low_in_droplets,
 |   23433 |        3036 |             629 |          158 |            2.01e-17 |
 
 
-While there appears to be significant overlap between the two sets, I wouldn't say it's a slam dunk based on these samples alone. Analysis of more of our data might help identify a set of genes that are consistently poorly-amplified.
+While there appears to be significant overlap between the two sets, I wouldn't say that we have identified a consistent set of under-amplified genes. Analysis of more tissues and cell types might clarify matters.
 
 ### Conclusions
 
 In the end we've built a relatively simple model of PCR and sampling, and it produces data that look qualitatively like the data we really observed. One open question is whether the distribution of PCR efficiencies is realistic. A bimodal distribution _might_ reflect that some proportion of cDNA sequences form dimers or otherwise impede PCR, but a unimodal distribution is more intuitive. It's possible that we're missing yet another mechanism in this process that would naturally lead to the behavior we're seeing.
 
-While this blog post is mostly about a particularly confusing plot and trying to understand its behavior, it was not a purely theoretical exercise. There are a few ideas that arise from this model of our data.
+While this blog post is mostly about trying to understand a particularly confusing plot, it was not a purely theoretical exercise. There are a few ideas that arise from this model of our data.
 
- 1. Looking at these plots and how they are affected by noise has emphasized the importance of UMIs for getting a good estimate of gene expression. By having a strong statistical model for how the data are generated, we can more easily identify genes with heterogeneous expression within a cluster. This level of detail is much more difficult to resolve when read counts are affected by amplification noise.
- 2. We spent a fair amount of time trying to recreate the shadow on the left side of the FACS plot, but we haven't discussed the implications of that shadow. According to our model, those are genes that have very low PCR efficiency and may not have been amplified at all during the second PCR step. Nevertheless, we are recovering those reads from the sequencer at a rate consistent with their expression. This suggests that we might be able to optimize our protocols by doing fewer rounds of library amplification. That would allow us to improve our sequencing throughput, either by sequencing more cells at once or by sequencing the same number of cells much more deeply.
- 3. When we are confident that we have a homogenous cluster of cells, the plots above show us a natural method of imputing gene expression values when they are missing, even in the face of PCR noise. The proportion of cells with ≥1 read is a good predictor of the number of UMIs in each cell, and this holds true even when the reads themselves are subjected to a biased PCR process. The points in the second plot have shifted to the right but not up or down, so it's possible the effect of amplification can be removed by fitting a curve to the top left of the graph. However, when we are not confident of a homogenous population this becomes much riskier, and it is harder to have that confidence in the face of noisy reads.
+ 1. **UMIs are really useful.** Looking at these plots and how they are affected by noise has emphasized the importance of UMIs for getting a good estimate of gene expression. By having a strong statistical model for how the data are generated, we can more easily identify genes with heterogeneous expression within a cluster. This level of detail is much more difficult to resolve when read counts are affected by amplification noise.
+ 2. **Too much PCR is likely harmful.** We spent a fair amount of time trying to recreate the shadow on the left side of the FACS plot, but we haven't discussed the implications of that shadow. According to our model, those are genes that have very low PCR efficiency and may not have been amplified at all during the second PCR step. Nevertheless, we are recovering those reads from the sequencer at a rate consistent with their expression. This suggests that we might be able to optimize our protocols by doing fewer rounds of library amplification. That would allow us to improve our sequencing throughput, either by sequencing more cells at once or by sequencing the same number of cells much more deeply.
+ 3. **We should be able to fill in our matrix.** When we are confident that we have a homogenous cluster of cells, the plots above show us a natural method of imputing gene expression values when they are missing, even in the face of PCR noise. The proportion of cells with ≥1 read is a good predictor of the number of UMIs in each cell, and this holds true even when the reads themselves are subjected to a biased PCR process. The points in the second plot have shifted to the right but not up or down, so it's possible the effect of amplification can be removed by fitting a curve to the top left of the graph. However, when we are not confident of a homogenous population this becomes much riskier, and it is harder to have that confidence in the face of noisy reads.
 
 ### Related Work
 
@@ -591,3 +589,13 @@ While this blog post is mostly about a particularly confusing plot and trying to
  * [Kebschull and Zador](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4666380/) is a deep dive into the many factors that can cause noise in PCR amplification.
  * [Grün et al.](https://www.nature.com/articles/nmeth.2930) and [Islam et al.](https://www.nature.com/articles/nmeth.2772) are two of many relevant papers about the noise in scRNA-seq data and finding ways to correct for it.
 
+---
+
+[^1]:
+
+    When we consider a specific gene, our sampling process is a [binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution) $X \sim B(n, p)$ with $n$ equal to the number of reads from that cell and $p$ equal to the relative abundance of that gene in the cell. When $n$ is large and $p$ is small, a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution) is a good approximation for this process, which is why most people refer to scRNA gene counts (assuming no variation between cells) as being [Poisson-distributed](http://www.nxn.se/valent/2018/1/30/count-depth-variation-makes-poisson-scrna-seq-data-negative-binomial). Seeing a particular gene $g$ in a cell is based on the depth of the library and the gene's relative expression, and the probability of seeing $k$ reads is given by:
+
+
+    $$ P_g(k\textrm{ reads}) = \frac{\lambda^k e^{-\lambda}}{k!}\hspace{30pt}\lambda = \frac{[\textrm{expression of }g]}{\textrm{[total expression]}} \times \textrm{[number of reads]} $$
+
+    When we are counting the prevalence of missing genes, this simplifies to $ P_g(k=0) = e^{-\lambda}$. The plot above is the complement, $ P_g(k>0) = 1 - e^{-\lambda}$.
