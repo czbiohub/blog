@@ -3,7 +3,7 @@ layout: post
 mathjax: true
 codehide: true
 title: Regression Hazards
-date: 2018-10-20
+date: 2018-10-19
 author: Joshua Batson
 ---
 
