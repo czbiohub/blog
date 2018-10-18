@@ -4,11 +4,10 @@ mathjax: true
 codehide: true
 title: Regression Hazards
 date: 2018-10-20
-author: Josh Batson
+author: Joshua Batson
 ---
 
-
-tl;dr "Technical confounders" are likely correlated with real biology. Regressing them out can badly distort the data.
+_"Technical confounders" are likely correlated with real biology. Regressing them out can badly distort the data._
 
 When analyzing single-cell sequencing data, it is natural to want to remove the effect of technical confounders. Statistics such as the cellular detection rate (number of genes detected per cell), library size (number of reads or UMI per cell), or percent mitochondrial reads may all represent some kind of bias. If those statistics vary between cell types, however, regressing them out will pull the expression vectors for those cell types closer together.
 
@@ -31,13 +30,6 @@ annotated_cells = tm.droplet.metadata %>% filter(!is.na(cell_ontology_class)) %>
 tmd <- SubsetData(tmd, cells.use = annotated_cells, do.clean = TRUE)
 
 tmd <- NormalizeData(tmd)
-```
-
-```PlainText
-Performing log-normalization
-0%   10   20   30   40   50   60   70   80   90   100%
-[----|----|----|----|----|----|----|----|----|----|
-**************************************************|
 ```
 
 Consider the Bladder. Because the epithelial cells have significantly more UMI on average than the mesenchymal or endothelial cells, we are set up for Simpson's paradox: even if the expression of a gene is positively correlated with nUMI within each cell type, it may be negatively correlated if all cell types are considered together.
