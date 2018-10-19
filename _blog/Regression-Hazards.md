@@ -70,7 +70,7 @@ FetchData(tmd, c('nGene', 'tissue', 'Top2a', 'cell_ontology_class')) %>% filter(
 
 ![png](/images/Regression-Hazards/regression-hazards_3.png)
 
-In fact, this sort of paradox is possible in every organ we collected. Each organ has a cell type which is an ourlier for nGene, setting up a potential Simpson's paradox for each gene differentially expressed in that cell type.
+In fact, this sort of paradox is possible in every organ we collected. Each organ has a cell type which is an outlier for nGene, setting up a potential Simpson's paradox for each gene differentially expressed in that cell type.
 
 ```r
 FetchData(tmd, c('nGene', 'tissue', 'cell_ontology_class'))%>%
