@@ -4,7 +4,6 @@
 
 
 ![Random forest model using transcription factors](../images/reprogramming-direct-diff/rf_tfs_summary.png)
-
 Our confidence in the model comes from empirical validation, when comparing the top 10 candidates with the transcription factors currently used to reprogram some of the cell types. The choice of using transcription factors to pull each cell type a part from the rest was natural given that using only transcription factors we were able to reconstruct the full dendrogram of cell identities with 90\%  
 
 
