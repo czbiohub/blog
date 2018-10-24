@@ -17,7 +17,7 @@ in contrast with many other chosen functional groups.
 ![Entanglements](../images/reprogramming-direct-diff/rf_entanglements.png)
 
 ## Cell surface markers
-While it is of note the inability of cell surface markers to pull cell types apart, the cell surface antigens are among the most ubiquitous class of proteins used on a daily basis in any cell biology lab. The majority of cell surface markers are molecules within cell's plasma membrane that are unique to different cell types. We sought to try using the random forest model used for identifying transcription factors associated with individual cell identities to come up with cell sorting panels using the [facs](../files/rf.model.one.vs.all.cellsurfacemarkers.facs.xlsx) and the [droplet](rf.model.one.vs.all.cellsurfacemarkers.droplet.xlsx) data in Tabula muris.
+While it is of note the inability of cell surface markers to pull cell types apart, the cell surface antigens are among the most ubiquitous class of proteins used on a daily basis in any cell biology lab. The majority of cell surface markers are molecules within cell's plasma membrane that are unique to different cell types. We sought to try using the random forest model used for identifying transcription factors associated with individual cell identities to come up with cell sorting panels using the [facs](../files/rf.model.one.vs.all.cellsurfacemarkers.facs.xlsx) and the [droplet](../files/rf.model.one.vs.all.cellsurfacemarkers.droplet.xlsx) data in Tabula muris.
 
 
 ## Seeking collaborations
