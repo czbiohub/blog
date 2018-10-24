@@ -4,9 +4,14 @@
 
 
 ![Random forest model using transcription factors](../images/reprogramming-direct-diff/rf_tfs_summary.png)
-Our confidence in the model comes from empirical validation, when comparing the top 10 candidates with the transcription factors currently used to reprogram some of the cell types. The choice of using transcription factors to pull each cell type a part from the rest was natural given that using only transcription factors we were able to reconstruct the full dendrogram of cell identities with 90\%  
 
+Our confidence in the model comes from empirical validation, when comparing the top 10 candidates with the transcription factors currently used to reprogram some of the cell types. The choice of using transcription factors to pull each cell type a part from the rest was natural given that using only transcription factors we were able to reconstruct the full dendrogram of cell identities with 90\% confidence
 
+![Tanglegram transcription factors](../images/reprogramming-direct-diff/rf_tfs_entanglements.png)
+
+in contrast with many other chosen functional groups.
+
+![Entanglements](../images/reprogramming-direct-diff/rf_entanglements.png)
 
 
 Of note is the inability of cell surface markers to pull cell types apart. Cell markers, also known as cell surface antigens, serve as monograms to help identify and classify cells. The majority of them are molecules or antigens within cell's plasma membrane. Unique to different cell types, there exist specific combinations of markers or antigens. These molecules serve not only as markers but they also have key functional roles. It is possible to diagnose diseases or direct treatment by identifying which molecules are present. Cell surface markers are among the most ubiquitous class of proteins used on daily basis in any cell biology lab. Cell are usually stained for such markers and analysed using flow cytometry, which enables the collection of cells that have at their surface the target marker, meaning that we can collect a pure or at least enriched population for a phenotype of interest. These however, does not generalize easily, as can be appreciated from our graph.
