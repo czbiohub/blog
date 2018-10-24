@@ -1,4 +1,4 @@
-# How can scRNA-seq inform the development of new reprogramming protocols and sorting markers?
+# How can scRNA-seq inform the development of new reprogramming protocols and sorting markers pannels?
 
 ## From transcription factors to reprogramming protocols
 [Induced pluripotent stem cells](https://www.eurostemcell.org/ips-cells-and-reprogramming-turn-any-cell-body-stem-cell) are the holy grail of regenerative medicine; however, the low efficiency of somatic cell reprogramming and the lengthy cell differentiation protocols are hardening their potential clinical applications {add references}. For this reason, one of the current major goals of single cell research is defining cell identities because there lies the key to the development of better reprogramming protocols. Critical to such work is the understanding of the underlying regulatory networks. While a handful of molecular functions are usually associated with cell regulation, the most commonly used are transcription factors or transcription regulators in general. In [Tabula muris](https://www.nature.com/articles/s41586-018-0590-4) we investigated how transcription factors are able to reconstruct known cell ontology relationships between cell populations. Using a random forest model strategy we [identified sets of transcription factors](spreedsheet with tfs) that can potentially be used to inform the design of novel reprogramming protocols.
@@ -17,8 +17,11 @@ in contrast with many other chosen functional groups.
 ![Entanglements](../images/reprogramming-direct-diff/rf_entanglements.png)
 
 ## Cell surface markers
-While it is of note the inability of cell surface markers to pull cell types apart, these cell surface antigens are commonly used to help identify and classify cells. The majority of them are molecules or antigens within cell's plasma membrane. Unique to different cell types, there exist specific combinations of markers or antigens. These molecules serve not only as markers but they also have key functional roles. It is possible to diagnose diseases or direct treatment by identifying which molecules are present. Cell surface markers are among the most ubiquitous class of proteins used on daily basis in any cell biology lab. Cell are usually stained for such markers and analysed using flow cytometry, which enables the collection of cells that have at their surface the target marker, meaning that we can collect a pure or at least enriched population for a phenotype of interest. These however, does not generalize easily, as can be appreciated from our graph.
+While it is of note the inability of cell surface markers to pull cell types apart, the cell surface antigens are among the most ubiquitous class of proteins used on daily basis in any cell biology lab. The majority of cell surface markers are molecules within cell's plasma membrane that are unique to different cell types. We sought to try using the random forest model used for identifying transcription factors associated with individual cell identities to come up with cell [surface markers panels](spreedsheet) that could be used to sort cells.
 
-In the other hand, using transcription factors we were not only able to reconstruct the full dendrogram but easily split cell groups. With this tree structure in mind it feels natural to ask what are the transcription factors that would enable us to ?
 
-Further experimental validation of the model results is currently in progress and we are seeking collaborations with labs that are willing to test the gene candidates.
+## Seeking collaborations
+We would like to experimental validate the model results so if you are willing to test the transcription factors or cell surface markers candidates reach out to us.
+
+
+- Angela Oliveira Pisco on the behalf of the Tabula muris consortium
