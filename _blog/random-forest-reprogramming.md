@@ -1,18 +1,17 @@
----
-title: "varSelRF_tabulamuris_blog.Rmd"
-output: html_notebook
----
 # How can scRNA-seq inform the development of new reprogramming protocols and sorting markers?
 
-[Induced pluripotent stem cells](https://www.eurostemcell.org/ips-cells-and-reprogramming-turn-any-cell-body-stem-cell) are the holy grail of regenerative medicine; however, the low efficiency of somatic cell reprogramming and the lengthy cell differentiation protocols are hardening their potential clinical applications {add references}. For this reason, one of the current major goals of single cell research is defining cell identities because there lies to key to the development of better reprogramming protocols. Critical to such work is the understanding of the underlying regulatory networks. While a handful of molecular functions are usually associated with cell regulation, the most commonly used are transcription factors or transcription regulators in general. In Tabula muris we investigated how transcription factors are able to reconstruct known cell ontology relationships between cell populations. Using a random forest model strategy we [identified sets of transcription factors](https://github.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/varSelRF_tabulamuris.Rmd) that can potentially be used to inform the design of novel reprogramming protocols.
+[Induced pluripotent stem cells](https://www.eurostemcell.org/ips-cells-and-reprogramming-turn-any-cell-body-stem-cell) are the holy grail of regenerative medicine; however, the low efficiency of somatic cell reprogramming and the lengthy cell differentiation protocols are hardening their potential clinical applications {add references}. For this reason, one of the current major goals of single cell research is defining cell identities because there lies the key to the development of better reprogramming protocols. Critical to such work is the understanding of the underlying regulatory networks. While a handful of molecular functions are usually associated with cell regulation, the most commonly used are transcription factors or transcription regulators in general. In [Tabula muris](https://www.nature.com/articles/s41586-018-0590-4) we investigated how transcription factors are able to reconstruct known cell ontology relationships between cell populations. Using a random forest model strategy we [identified sets of transcription factors](spreedsheet with tfs) that can potentially be used to inform the design of novel reprogramming protocols.
+
 
 ![Random forest model using transcription factors](../images/reprogramming-direct-diff/rf_tfs_summary.png)
 
-Our confidence in the model comes from empirical valiadation, when comparing the top 10 candidates with the transcription factors currently used to reprogram some of the cell types.
+Our confidence in the model comes from empirical validation, when comparing the top 10 candidates with the transcription factors currently used to reprogram some of the cell types. The choice of using transcription factors to pull each cell type a part from the rest was natural given that using only transcription factors we were able to reconstruct the full dendrogram of cell identities with 90\%  
 
 
 
 
 Of note is the inability of cell surface markers to pull cell types apart. Cell markers, also known as cell surface antigens, serve as monograms to help identify and classify cells. The majority of them are molecules or antigens within cell's plasma membrane. Unique to different cell types, there exist specific combinations of markers or antigens. These molecules serve not only as markers but they also have key functional roles. It is possible to diagnose diseases or direct treatment by identifying which molecules are present. Cell surface markers are among the most ubiquitous class of proteins used on daily basis in any cell biology lab. Cell are usually stained for such markers and analysed using flow cytometry, which enables the collection of cells that have at their surface the target marker, meaning that we can collect a pure or at least enriched population for a phenotype of interest. These however, does not generalize easily, as can be appreciated from our graph.
 
-In the other hand, using transcription factors we were not only able to reconstruct the full dendrogram but easily split cell groups. With this tree structure in mind it feels natural to ask what are the transcription factors that would enable us to pull each cell type a part from the rest?
+In the other hand, using transcription factors we were not only able to reconstruct the full dendrogram but easily split cell groups. With this tree structure in mind it feels natural to ask what are the transcription factors that would enable us to ?
+
+Further experimental validation of the model results is currently in progress and we are seeking collaborations with labs that are willing to test the gene candidates.
