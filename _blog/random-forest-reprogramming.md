@@ -24,4 +24,4 @@ While it is of note the inability of cell surface markers to pull cell types apa
 We would like to experimental validate the model results so if you are willing to test the transcription factors or cell surface markers candidates reach out to us.
 
 
-<div style="text-align: right"> *Angela Oliveira Pisco on the behalf of the Tabula muris consortium* </div>
+<div style="text-align: right"> <em>Angela Oliveira Pisco on the behalf of the Tabula muris consortium</em> </div>
