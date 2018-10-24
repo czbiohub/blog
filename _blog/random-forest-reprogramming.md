@@ -21,6 +21,6 @@ While it is of note the inability of cell surface markers to pull cell types apa
 
 
 ## Seeking collaborations
-While this model is still very experimental, the results match previously known findings, as for example Cd36 as an endothelial marker. We would like to take it further and experimental validate the results so if you are willing to test the transcription factors or cell surface markers candidates reach out!
+While this model is still very experimental, the results match previously known findings, as for example the combination of *Cd36* and *Cav1* being enough to sort fat endothelial cells. We would like to take this further and experimental validate the results so if you are willing to test the transcription factors or cell surface markers candidates reach out!
 
 *[@aopisco](https://github.com/aopisco) on the behalf of the Tabula muris consortium*
