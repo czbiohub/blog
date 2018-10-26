@@ -1,35 +1,37 @@
 ---
 layout: post
 mathjax: true
-codehide: true
-title: How can scRNA-seq inform the development of new reprogramming protocols and sorting markers pannels?
+title: From transcription factors to reprogramming protocols
 date: 2018-10-26
 author: Angela Oliveira Pisco
 ---
 
 
+In [Tabula muris](https://www.nature.com/articles/s41586-018-0590-4) we used a random forest model strategy to identify sets of transcription factors using [facs](https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-018-0590-4/MediaObjects/41586_2018_590_MOESM8_ESM.xlsx) and [droplet](https://github.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.transcriptionfactors.droplet.xlsx) data that can potentially be used to inform the design of novel reprogramming protocols.
 
-## From transcription factors to reprogramming protocols
-[Induced pluripotent stem cells](https://www.eurostemcell.org/ips-cells-and-reprogramming-turn-any-cell-body-stem-cell) are the holy grail of regenerative medicine; however, the low efficiency of somatic cell reprogramming and the lengthy cell differentiation protocols are hardening their potential clinical applications. For this reason, one of the current major goals of single cell research is defining cell identities because there lies the key to the development of better reprogramming protocols. Critical to such work is the understanding of the underlying regulatory networks. While a handful of molecular functions are usually associated with cell regulation, the most commonly used are transcription factors or transcription regulators in general. In [Tabula muris](https://www.nature.com/articles/s41586-018-0590-4) we investigated how transcription factors are able to reconstruct known cell ontology relationships between cell populations. Using a random forest model strategy we identified sets of transcription factors using [facs](https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-018-0590-4/MediaObjects/41586_2018_590_MOESM8_ESM.xlsx) and [droplet](https://github.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.transcriptionfactors.droplet.xlsx) data that can potentially be used to inform the design of novel reprogramming protocols.
-
+The [varSelRF](https://cran.r-project.org/web/packages/varSelRF/index.html) package starts as a typical random forest model by calculating the importance of each gene for defining cel types. Next it uses out-of-bag error as the minimization criterion and carries out variable elimination with random forests by successively eliminating the least important variables (with importance as returned from the random forest analysis). The algorithm iteratively fits random forests, at each iteration building a new forest after discarding those variables (genes) with the smallest variable importance; the selected set of genes is the one that yields the smallest out-of-bag error rate. This leads to the selection of small sets of non-redundant variables.
 
 ![Random forest model using transcription factors](/images/reprogramming-direct-diff/rf_tfs_summary.png)
 
+Our confidence in the model comes from comparing the top candidates with the transcription factors currently used to reprogram some of the cell types.
 
 ## Contribution of transcription factors to cell identity
-Our confidence in the model comes from empirical validation, when comparing the top 10 candidates with the transcription factors currently used to reprogram some of the cell types. The choice of using transcription factors to pull each cell type a part from the rest was natural given that using only transcription factors we were able to reconstruct the full dendrogram of cell identities with 90\% confidence
+ The choice to use transcription factors to pull each cell type apart from the rest was natural, given that using only transcription factors we were able to reconstruct the full dendrogram of cell identities with 90% confidence.
 
 ![Tanglegram transcription factors](/images/reprogramming-direct-diff/rf_tfs_entanglements.png)
 
-in contrast with many other chosen functional groups.
+To compute the tanglegram we used the dendrogram created from all expressed genes as the reference for comparisons to the dendrograms produced using particular gene ontology cellular functions (transcription factors, cell surface markers, RNA splicing factors). Entanglement is a measure of alignment between two dendrograms and the entanglement score ranges from 0 (exact alignment) to 1 (no alignment)
 
 ![Entanglements](/images/reprogramming-direct-diff/rf_entanglements.png)
 
 ## Cell surface markers
-While it is of note the inability of cell surface markers to pull cell types apart, the cell surface antigens are among the most ubiquitous class of proteins used on a daily basis in any cell biology lab. The majority of cell surface markers are molecules within cell's plasma membrane that are unique to different cell types. We sought to try using the random forest model used for identifying transcription factors associated with individual cell identities to come up with cell sorting panels using the [facs](https://github.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.facs.xlsx) and the [droplet](https://github.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.droplet.xlsx) data in Tabula muris.
+While the inability of cell surface markers to pull cell types apart is notable, the cell surface antigens are some of the most commonly used proteins in any cell biology lab. The majority of cell surface markers are molecules within the cell's plasma membrane that are unique to different cell types. We tried the same random forest model to come up with cell sorting panels using the [FACS](https://raw.githubusercontent.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.facs.xlsx) and the [droplet](https://raw.githubusercontent.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.droplet.xlsx) data in the Tabula Muris.
 
+[missing conclusion here]
 
-## Seeking collaborations
-While this model is still very experimental, the results match previously known findings, as for example the combination of *Cd36* and *Cav1* being enough to sort fat endothelial cells. We would like to take this further and experimental validate the results so if you are willing to test the transcription factors or cell surface markers candidates reach out!
+## Conclusion
+[Induced pluripotent stem cells](https://www.eurostemcell.org/ips-cells-and-reprogramming-turn-any-cell-body-stem-cell) are the holy grail of regenerative medicine; however, the low efficiency of somatic cell reprogramming and the lengthy cell differentiation protocols are hardening their potential clinical applications. For this reason, one of the current major goals of single cell research is defining cell identities because there lies the key to the development of better reprogramming protocols. With our machine learning approach we are not only able to provide candidate transcription factors for novel reprogramming protocols, but we can already take a step further and suggest cell type validation sets, as our model can also predict cell surface markers that be used either for FACS sorting or antibody staining.
+
+While this is still very experimental, the results match previously known findings, as for example the combination of *Cd36* and *Cav1* being enough to sort fat endothelial cells. We are interested in knowing whether our model predictions are valid in cell types not previously reported, so if would like to take this further and experimental validate the results by either testing the transcription factors or the cell surface markers candidates reach out!
 
 *[@aopisco](https://github.com/aopisco) on the behalf of the Tabula muris consortium*
