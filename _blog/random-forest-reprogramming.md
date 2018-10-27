@@ -7,7 +7,7 @@ author: Angela Oliveira Pisco
 ---
 
 
-In [Tabula Muris](https://www.nature.com/articles/s41586-018-0590-4) we used a random forest model strategy to identify sets of transcription factors using [facs](https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-018-0590-4/MediaObjects/41586_2018_590_MOESM8_ESM.xlsx) and [droplet](https://github.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.transcriptionfactors.droplet.xlsx) data that can potentially be used to inform the design of novel reprogramming protocols.
+In [Tabula Muris](https://www.nature.com/articles/s41586-018-0590-4) we used a random forest model strategy to identify sets of transcription factors using [FACS](https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-018-0590-4/MediaObjects/41586_2018_590_MOESM8_ESM.xlsx) and [droplet](https://github.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.transcriptionfactors.droplet.xlsx) data that can potentially be used to inform the design of novel reprogramming protocols.
 
 The [varSelRF](https://cran.r-project.org/web/packages/varSelRF/index.html) package starts with a [random forest](https://en.wikipedia.org/wiki/Random_forest) model to calculate the importance of each gene for defining cell types. Next it uses out-of-bag error as the minimization criterion and carries out variable elimination by successively eliminating the least important variables (with importance as returned from the random forest analysis). The algorithm iteratively fits random forests, at each iteration building a new forest after discarding those variables (genes) with the smallest importance; the selected set of genes is the one that yields the smallest out-of-bag error rate. This leads to the selection of small sets of non-redundant variables.
 
@@ -24,7 +24,7 @@ Entanglement is a measure of alignment between two dendrograms and the entanglem
 
 
 ## Cell surface markers
-While the dendrogram obtained when using only cell surface markers is not as good as pulling cell types apart as it is when we use transcription regulators, the cell surface antigens are some of the most commonly used proteins in any cell biology lab. The majority of cell surface markers are molecules within the cell's plasma membrane that are unique to different cell types. We tried the same random forest model to come up with cell sorting panels using the [FACS](https://raw.githubusercontent.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.facs.xlsx) and the [droplet](https://raw.githubusercontent.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.droplet.xlsx) data in the Tabula Muris.
+The dendrogram obtained using only cell surface markers is not as good at identifying cell types as the one we get using transcription regulators. However the cell surface antigens are some of the most commonly used proteins in any cell biology lab. Cell surface markers are molecules within the cell's plasma membrane and in combination can uniquely identify a cell type. We tried the same random forest model to come up with cell sorting panels using the [FACS](https://raw.githubusercontent.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.facs.xlsx) and the [droplet](https://raw.githubusercontent.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.droplet.xlsx) data in the Tabula Muris.
 
 Despite cell surface markers performance in the above chart, for the majority of the cell types tested we got a small, manageable list of markers that are cell type specific.
 
@@ -33,4 +33,4 @@ Despite cell surface markers performance in the above chart, for the majority of
 
 While this is still very experimental, the results match previously known findings, as for example the combination of *Cd36* and *Cav1* being enough to sort fat endothelial cells. We are interested in knowing whether our model predictions are valid in cell types not previously reported, so if you take this further and experimental validate the results by either testing the transcription factors or the cell surface markers candidates reach out!
 
-*[@aopisco](https://github.com/aopisco) on the behalf of the Tabula muris consortium*
+*[@aopisco](https://github.com/aopisco) on the behalf of the Tabula Muris consortium*
