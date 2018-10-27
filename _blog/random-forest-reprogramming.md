@@ -24,7 +24,7 @@ Entanglement is a measure of alignment between two dendrograms and the entanglem
 
 
 ## Cell surface markers
-While the dendrogram obtained when using only cell surface markers is not as good as pulling cell types apart as it is when we use transcription regulators, the cell surface antigens are some of the most commonly used proteins in any cell biology lab. The majority of cell surface markers are molecules within the cell's plasma membrane that are unique to different cell types. We tried the same random forest model to come up with cell sorting panels using the [FACS](https://raw.githubusercontent.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.facs.xlsx) and the [droplet](https://raw.githubusercontent.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.droplet.xlsx) data in the Tabula Muris.
+While the dendrogram obtained when using only cell surface markers is not as good at pulling cell types apart as it is when we use transcription regulators, the cell surface antigens are some of the most commonly used proteins in any cell biology lab. The majority of cell surface markers are molecules within the cell's plasma membrane that are unique to different cell types. We tried the same random forest model to come up with cell sorting panels using the [FACS](https://raw.githubusercontent.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.facs.xlsx) and the [droplet](https://raw.githubusercontent.com/czbiohub/tabula-muris/blob/master/23_tf_analysis/rf.model.one.vs.all.cellsurfacemarkers.droplet.xlsx) data in the Tabula Muris.
 
 Despite cell surface markers performance in the above chart, for the majority of the cell types tested we got a small, manageable list of markers that are cell type specific.
 
@@ -33,4 +33,4 @@ Despite cell surface markers performance in the above chart, for the majority of
 
 While this is still very experimental, the results match previously known findings, as for example the combination of *Cd36* and *Cav1* being enough to sort fat endothelial cells. We are interested in knowing whether our model predictions are valid in cell types not previously reported, so if you take this further and experimental validate the results by either testing the transcription factors or the cell surface markers candidates reach out!
 
-*[@aopisco](https://github.com/aopisco) on the behalf of the Tabula muris consortium*
+*[@aopisco](https://github.com/aopisco) on the behalf of the Tabula Muris consortium*
