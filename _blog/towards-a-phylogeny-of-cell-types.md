@@ -21,6 +21,7 @@ author: Olga Botvinnik
 - cells --> tissues --> organs --> organ systems --> organisms
 - Cells are a fundamental unit of life
 - To study evolution of species, need a quantitative method of studying phenotype
+  - single-cell RNA-seq is a quantitative phenotypic readout
 
 ## Compare cell types across species with protein $k$-mers
 
