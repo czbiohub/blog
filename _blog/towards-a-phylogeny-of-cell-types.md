@@ -16,12 +16,57 @@ author: Olga Botvinnik
 
 ## Introduction
 
+- Animal multicellularity
+  - Genes necessary for animal multicellularity evolved before animal origins \cite{Brunet:2017hm}
+  - Closest single-celled living relatives to animals is choanoflagellates
+  - Choanoflagellates have a "collar complex," which manifests in modern
+    species as cells involved in food absorption, e.g. lining of the intestinal
+    cells \cite{Brunet:2017hm}
+
+![](/images/towards-a-phylogeny-of-cell-types/brunet2017_figure1.png)
+*Figure 1 from \cite{Brunet:2017hm}.*
+
+
+- Can a new species be defined by introduction of a new cell type?
+    - e.g. photoreceptors \cite{Anonymous:MclPNoLC}
+
+- Two main hypotheses in cell type evolution: *Temporal-to-spatial transition
+  (TST)* and *division of labor (DOL)* hypotheses.
+    - TST
+    - DOL
+  - Why can't it be both?
+
+
+- Previous work in identifying evolution of cell types
+  - Compare sequence evolution in genes relevant to cell types
+
+    ![](/images/towards-a-phylogeny-of-cell-types/arendt2003_figure3.png) *Figure
+  3 from \cite{Anonymous:MclPNoLC}.*
+
+    ![](/images/towards-a-phylogeny-of-cell-types/arendt2003_figure4.png) *Figure 4 from
+    \cite{Anonymous:MclPNoLC}.*
+
+  - Comparing bulk transcriptomes in Rosenthal 2018
+
+    ![](/images/towards-a-phylogeny-of-cell-types/rosenthal2018_figure2.png)
+    *Figure 2 from \cite{Rosental:2018ik}.*
+
+    ![](/images/towards-a-phylogeny-of-cell-types/rosenthal2018_figure4.png)
+    *Figure 4 from \cite{Rosental:2018ik}.*
+
+
+![](/images/towards-a-phylogeny-of-cell-types/arendt2016_figure1ab.png) *Figure
+1ab from \cite{Arendt:2016dl}.*
+
+
+
+
 - What features contribute to speciation?
-- Does introduction of a new cell type create a new species?
-- cells --> tissues --> organs --> organ systems --> organisms
 - Cells are a fundamental unit of life
+- Does introduction of a new cell type create a new species?
 - To study evolution of species, need a quantitative method of studying phenotype
   - single-cell RNA-seq is a quantitative phenotypic readout
+- cells --> tissues --> organs --> organ systems --> organisms
 
 ## Compare cell types across species with protein $k$-mers
 
@@ -146,7 +191,8 @@ types across species for a symmetric matrix?
 
 ### How do we know we are right?
 
-1. Use a species-specific cell type or tissue and ensure its "age" corresponds to the correct "age" of the species? - Questions
+1. Use a species-specific cell type or tissue and ensure its "age" corresponds
+   to the correct "age" of the species? Potentially use photoreceptor cells \cite{Anonymous:MclPNoLC}
 
 ### Questions we can ask using this method
 
