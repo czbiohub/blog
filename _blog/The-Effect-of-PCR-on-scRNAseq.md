@@ -460,7 +460,7 @@ bam_file = pysam.AlignmentFile("10X_P7_11_possorted_genome_bam.bam", mode="rb")
 for a in bam_file:
     if (a.mapq == 255                                    # high quality mapping
         and a.has_tag("CB") and a.get_tag("CB") in bc_i  # in our set of barcodes,
-        and a.has_tag("GN") and a.get_tag["GN"] in g_i   # that maps to a single gene,
+        and a.has_tag("GN") and a.get_tag("GN") in g_i   # that maps to a single gene,
         and a.has_tag("RE") and a.get_tag("RE") == "E"   # specifically to an exon,
         and a.has_tag("UB")):                            # and has a good UMI
 
