@@ -31,7 +31,7 @@ In this first process, we prepare our fastq files for the next steps. We take th
 ###### Step 2: Assembly
 In this step, we assemble the reads using TraCeR.
 
-<p>`process assemble`:</p>
+`process assemble`:
 This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR sequences. The reads are assembled asynchronously and the output is published to a specified `S3 Bucket`. The bucket contains subdirectories for each sample with the output from Bowtie2, Trinity, IgBlast, Kallisto and Salmon as well as files describing the TCR sequences that were assembled.
 
 The path to the directory containing all the above information is output into a new `Channel`, ***assembled_ch***, which will be used for the last step.
