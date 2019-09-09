@@ -26,7 +26,7 @@ The implementation performs 3 tasks which are linked together through `Channels`
   The first step is to create a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. In our case, the file pairs returned are the sample names and their fastq files of paired-end RNA-seq reads from single-cell. These file pairs are then used as input for the first process.
 
   `process unzip_reads`:
-  In this first process, we prepare our fastq files for the next steps. We take the fastq files from the `Channel` we opened and unzip them. The unzipped fastq files and their respective sample names are passed into a new `Channel`, *reads_unzipped_ch*, as output to be used in the following process.
+  In this first process, we prepare our fastq files for the next steps. We take the fastq files from the `Channel` we opened and unzip them. The unzipped fastq files and their respective sample names are passed into a new `Channel`, ***reads_unzipped_ch***, as output to be used in the following process.
 
 
   ###### Step 2: Assembly
@@ -35,11 +35,11 @@ The implementation performs 3 tasks which are linked together through `Channels`
   `process assemble`:
   This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR sequences. The reads are assembled asynchronously and the output is published to a specified `S3 Bucket`. The bucket contains subdirectories for each sample with the output from Bowtie2, Trinity, IgBlast, Kallisto and Salmon as well as files describing the TCR sequences that were assembled.
 
-  The path to the directory containing all the above information is output into a new `Channel`, *assembled_ch*, which will be used for the last step.
+  The path to the directory containing all the above information is output into a new `Channel`, ***assembled_ch***, which will be used for the last step.
 
 
   ###### Step 3: Summarize
   Finally, in this last step we summarize the TCR recovery rates as well as generate clonotype networks from the assembled reads.
 
   `process summarize`:
-  This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on *assembled_ch*. What this does is it collects all the files emitted from `assembled_ch` into a list and uses that as the input for `tracer summarize`. The output contains summary statistics describing successful TCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same S3 bucket.
+  This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is it collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for `tracer summarize`. The output contains summary statistics describing successful TCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same S3 bucket.
