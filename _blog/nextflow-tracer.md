@@ -13,7 +13,7 @@ author: Clarissa Vazquez-Ramos
 Our TraCeR pipeline is currently ran from command line prompts and on AWS Batch. While this method already efficiently runs the pipeline, there is no straight forward approach to run other of the TraCeR tasks consecutively; Nextflow solves this problem.
 
 
-## What is <img src="/images/nextflow-tracer/nextflow_logo.png" alt="nextflow logo" width="15%" height="15%">  ?
+## What is Nextflow?
 [Nextflow](https://www.nextflow.io/) allows for scalable and reproducible scientific workflows using containers. It simplifies the implementation and deployment of complex, parallel workflows. Because Nextflow is based on the dataflow programming model, you can effortlessly link processes together in one workflow.
 
 Nextflow also has the capability to run pipelines on AWS Batch without having to deal with the AWS interface.
@@ -56,3 +56,5 @@ The implementation performs 3 tasks which are linked together through `Channels`
    This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is it collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for `tracer summarize`. The output contains summary statistics describing successful TCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same S3 bucket.
    
 </blockquote>
+
+<img src="/images/nextflow-tracer/nextflow_logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/nextflow-tracer/aws_batch.png" alt="aws batch" width="60%" height="60%">
