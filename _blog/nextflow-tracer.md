@@ -57,4 +57,4 @@ The implementation performs 3 tasks which are linked together through `Channels`
    
 </blockquote>
 
-<img src="/images/nextflow-tracer/nextflow_logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/nextflow-tracer/aws_batch.png" alt="aws batch" width="60%" height="60%">
+<img src="/images/nextflow-tracer/nextflow_logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/nextflow-tracer/aws_batch.png" alt="aws batch" width="50%" height="50%">
