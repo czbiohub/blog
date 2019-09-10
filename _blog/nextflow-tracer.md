@@ -17,6 +17,8 @@ Our TraCeR pipeline is currently ran from command line prompts and on AWS Batch.
 
 Nextflow also has the capability to run pipelines on AWS Batch without having to deal with the AWS interface.
 
+![Nextflow Logo](/images/nextflow-tracer/nextflow_logo.png)
+
 
 ## The Implementation
 The implementation performs 3 tasks which are linked together through `Channels`. A `Channel` has 2 major properties: sending messages and receiving data. A `Channel` sends messages in an asynchronous manner in which the operation will complete immediately, without having to wait for the receiving process. It will also receive data, which is a blocking operation where the receiving process is stopped until the message has arrived.
