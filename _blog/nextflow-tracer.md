@@ -21,7 +21,7 @@ Nextflow also has the capability to run pipelines on AWS Batch without having to
 ## The Implementation
 The implementation performs 3 tasks which are linked together through `Channels`. A `Channel` has 2 major properties: sending messages and receiving data. A `Channel` sends messages in an asynchronous manner in which the operation will complete immediately, without having to wait for the receiving process. It will also receive data, which is a blocking operation where the receiving process is stopped until the message has arrived.
  
- ###### Step 1: Open a `Channel` and Preparation
+ ### Step 1: Open a `Channel` and Preparation
   
    The first step is to create a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. In our case, the file pairs returned are the sample names and their fastq files of paired-end RNA-seq reads from single-cell. These file pairs are then used as input for the first process.
 
@@ -32,7 +32,7 @@ The implementation performs 3 tasks which are linked together through `Channels`
 
 </blockquote>
 
-###### Step 2: TraCeR Assembly
+### Step 2: TraCeR Assembly
   
    In this step, we assemble the reads using TraCeR.
 
@@ -45,7 +45,7 @@ The implementation performs 3 tasks which are linked together through `Channels`
    
 </blockquote>
 
-###### Step 3: TraCeR Summarize
+### Step 3: TraCeR Summarize
   
    Finally, in this last step we summarize the TCR recovery rates as well as generate clonotype networks from the assembled reads.
  
