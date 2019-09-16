@@ -16,7 +16,7 @@ Our TraCeR pipeline is currently ran from command line prompts and on AWS Batch.
 ## What is Nextflow?
 [Nextflow](https://www.nextflow.io/) allows for scalable and reproducible scientific workflows using containers. It simplifies the implementation and deployment of complex, parallel workflows. Because Nextflow is based on the dataflow programming model, you can effortlessly link processes together in one workflow.
 
-Nextflow also has the capability to run pipelines on AWS Batch without having to deal with the AWS interface.
+Nextflow also has the capability to run pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) without having to deal with the AWS interface.
 
 
 ## The Implementation
