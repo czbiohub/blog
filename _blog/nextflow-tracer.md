@@ -7,8 +7,14 @@ author: Clarissa Vazquez-Ramos
 ---
 
 
-## A Brief Introduction to TraCeR
-[TraCeR](https://github.com/Teichlab/tracer) is a tool that reconstructs the sequences of rearranged and expressed T cell receptor genes from single-cell RNA-seq data. The TCR sequences are then used to identify cells that have the same receptor sequences and indicate that they are derived from the same original clonally-expanded cell.
+## TraCeR and its Modes
+[TraCeR](https://github.com/Teichlab/tracer) has 3 modes, but of the 3 modes we use only 2: *assemble* and *summarize*
+
+1. ***Assemble*** takes fastq files of paired-end RNA-seq reads from single-cells and reconstructs TCR sequences and for each cell, an output directory is created that contains subdirectories with output from Bowtie2, Trinity, IgBlast, Kallisto and Salmon as well as files describing the TCR sequences that were assembled.
+
+2. ***Summarize*** takes a directory output from the ***assemble*** phase of several cells and summarizes the TCR recovery rates as well as generate clonotype networks from the assembled reads.
+
+We run the above modes on our mice single-cell data to identify cells that have the same receptor sequences. This can indicate that the cells are derived from the same original clonally-expanded cell.
 
 Our TraCeR pipeline is currently ran from command line prompts and on AWS Batch. While this method already efficiently runs the pipeline, there is no straight forward approach to run other of the TraCeR tasks consecutively; Nextflow solves this problem.
 
