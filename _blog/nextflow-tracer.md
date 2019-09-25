@@ -7,22 +7,28 @@ author: Clarissa Vazquez-Ramos
 ---
 
 
-## A Brief Introduction to TraCeR
-[TraCeR](https://github.com/Teichlab/tracer) is a tool that reconstructs the sequences of rearranged and expressed T cell receptor genes from single-cell RNA-seq data. The TCR sequences are then used to identify cells that have the same receptor sequences and indicate that they are derived from the same original clonally-expanded cell.
+## TraCeR and its Modes
+[TraCeR](https://github.com/Teichlab/tracer) has 3 modes, but of the 3 modes we use only 2: *assemble* and *summarize*
+
+1. ***Assemble*** takes fastq files of paired-end RNA-seq reads from single-cells and reconstructs TCR sequences and for each cell, an output directory is created that contains subdirectories with output from Bowtie2, Trinity, IgBlast, Kallisto and Salmon as well as files describing the TCR sequences that were assembled.
+
+2. ***Summarize*** takes a directory output from the ***assemble*** phase of several cells and summarizes the TCR recovery rates as well as generate clonotype networks from the assembled reads.
+
+We run the above modes on our mice single-cell data to identify cells that have the same receptor sequences. This can indicate that the cells are derived from the same original clonally-expanded cell.
 
 Our TraCeR pipeline is currently ran from command line prompts and on AWS Batch. While this method already efficiently runs the pipeline, there is no straight forward approach to run other of the TraCeR tasks consecutively; Nextflow solves this problem.
 
 
-## What is <img src="/images/nextflow-tracer/nextflow_logo.png" alt="nextflow logo" width="15%" height="15%">  ?
+## What is Nextflow?
 [Nextflow](https://www.nextflow.io/) allows for scalable and reproducible scientific workflows using containers. It simplifies the implementation and deployment of complex, parallel workflows. Because Nextflow is based on the dataflow programming model, you can effortlessly link processes together in one workflow.
 
-Nextflow also has the capability to run pipelines on AWS Batch without having to deal with the AWS interface.
+Nextflow also has the capability to run pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) without having to deal with the AWS interface.
 
 
 ## The Implementation
 The implementation performs 3 tasks which are linked together through `Channels`. A `Channel` has 2 major properties: sending messages and receiving data. A `Channel` sends messages in an asynchronous manner in which the operation will complete immediately, without having to wait for the receiving process. It will also receive data, which is a blocking operation where the receiving process is stopped until the message has arrived.
  
- ### Step 1: Open a `Channel` and Preparation
+ ### Step 1: Preparation
   
    The first step is to create a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. In our case, the file pairs returned are the sample names and their fastq files of paired-end RNA-seq reads from single-cell. These file pairs are then used as input for the first process.
 
@@ -56,3 +62,5 @@ The implementation performs 3 tasks which are linked together through `Channels`
    This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is it collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for `tracer summarize`. The output contains summary statistics describing successful TCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same S3 bucket.
    
 </blockquote>
+
+<img src="/images/nextflow-tracer/nextflow_logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/nextflow-tracer/aws_batch.png" alt="aws batch" width="40%" height="40%">
