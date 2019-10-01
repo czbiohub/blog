@@ -28,7 +28,7 @@ Nextflow also has the capability to run pipelines on [AWS Batch](https://docs.aw
 ## The Implementation
 The implementation performs 3 tasks which are linked together through `Channels`. A `Channel` has 2 major properties: sending messages and receiving data. A `Channel` sends messages in an asynchronous manner in which the operation will complete immediately, without having to wait for the receiving process. It will also receive data, which is a blocking operation where the receiving process is stopped until the message has arrived.
 <p align="center">
-<img src="/images/nextflow-tracer/workflow.png" alt="nextflow workflow" width="50%" height="50%">
+<img src="/images/nextflow-tracer/workflow.png" alt="nextflow workflow" width="70%" height="70%">
 </p> 
 
  ### Step 1: Preparation
