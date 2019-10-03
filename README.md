@@ -19,6 +19,31 @@ jupyter nbconvert --to markdown --template path/to/this/repo/jekyll.tpl  Your-Po
 
 You should add `date: YYYY-MM-DD` to the post's frontmatter. If the date is in the future, Jekyll won't publish it by default: use `jekyll serve --future` to view it locally. After converting, move the resulting `.md` file to `_blog` and the folder of images to `images`.
 
+### Local install
+
+Getting everything installed can be a little tricky. Here's what I did:
+
+ 1. Install Ruby using [homebrew](https://brew.sh) and `brew install ruby`. Installing using anaconda didn't work for me due to compiler issues that I don't want to debug. OS X includes Ruby already, but it's an older version and Jekyll needs something more recent.
+      * Because OS X has Ruby already, homebrew will not put this version on your PATH. If you want you can set that up in your shell profile, but I decided to set up a blog conda environment (below).
+ 2. (optional) Set up a conda environment so that you can `conda activate [env-name]` when you want the blog to work.
+     * create a file `~/miniconda3/envs/[env-name]/etc/conda/activate.d/env_vars.sh` that adds the relevant directories to your path, and another, `~/miniconda3/envs/[env-name]/etc/conda/deactivate.d/env_vars.sh` to remove it:
+   
+```shell
+#!/bin/sh
+
+export PATH="/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/2.6.0/bin:$PATH"
+```
+
+```shell
+#!/bin/sh
+
+export PATH=${PATH#/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/2.6.0/bin:}
+```
+
+ 3. Install the needed [Ruby dependencies](https://github.com/barryclark/jekyll-now#local-development) with `gem install github-pages`
+
+
 ### Local testing
 
-You can serve a local version of the blog by running `jekyll serve` in the root directory of this repo, after installing the relevant [dependencies](https://github.com/barryclark/jekyll-now#local-development). An easy workflow is to make a new branch for each post, write and preview it locally, and push it for review. Merge it into master when you're ready for primetime.
+You can serve a local version of the blog by running `jekyll serve` in the root directory of this repo, after getting set up (above). An easy workflow is to make a new branch for each post, write and preview it locally, and push it for review. Merge it into master when you're ready for primetime.
+
