@@ -28,20 +28,21 @@ Getting everything installed can be a little tricky. Here's what I did:
  2. (optional) Set up a conda environment so that you can `conda activate [env-name]` when you want the blog to work.
      * create a file `~/miniconda3/envs/[env-name]/etc/conda/activate.d/env_vars.sh` that adds the relevant directories to your path, and another, `~/miniconda3/envs/[env-name]/etc/conda/deactivate.d/env_vars.sh` to remove it:
    
-```shell
-#!/bin/sh
+  ```shell
+  #!/bin/sh
 
-export PATH="/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/2.6.0/bin:$PATH"
-```
+  # add ruby to path on activate
+  export PATH="/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/2.6.0/bin:$PATH"
+  ```
 
-```shell
-#!/bin/sh
+  ```shell
+  #!/bin/sh
 
-export PATH=${PATH#/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/2.6.0/bin:}
-```
+  # remove ruby from path on deactivate
+  export PATH=${PATH#/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/2.6.0/bin:}
+  ```
 
- 3. Install the needed [Ruby dependencies](https://github.com/barryclark/jekyll-now#local-development) with `gem install github-pages`
-
+ 3. In the activated environment, install the needed [Ruby dependencies](https://github.com/barryclark/jekyll-now#local-development) with `gem install github-pages`
 
 ### Local testing
 
