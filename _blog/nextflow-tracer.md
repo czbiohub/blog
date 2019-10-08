@@ -1,7 +1,7 @@
 ---
 layout: post
 mathjax: true
-title: TraCeR & BraCeR Pipeline: Nextflow Workflows
+title: TraCeR Pipeline as a Nextflow workflow
 date: 2019-09-06
 author: Clarissa Vazquez-Ramos
 ---
@@ -28,42 +28,42 @@ Nextflow also has the capability to run pipelines on [AWS Batch](https://docs.aw
 ## The Implementation
 The implementation performs 3 tasks which are linked together through `Channels`. A `Channel` has 2 major properties: sending messages and receiving data. A `Channel` sends messages in an asynchronous manner in which the operation will complete immediately, without having to wait for the receiving process. It will also receive data, which is a blocking operation where the receiving process is stopped until the message has arrived.
 <p align="center">
-<img src="/images/tracer-bracer/nf-workflow.png" alt="nextflow workflow" width="70%" height="70%">
-</p> 
+<img src="/images/nextflow-tracer/workflow.png" alt="nextflow workflow" width="70%" height="70%">
+</p>
 
  ### Step 1: Preparation
-  
+
    The first step is to create a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. In our case, the file pairs returned are the sample names and their fastq files of paired-end RNA-seq reads from single-cell. These file pairs are then used as input for the first process.
 
    **`process unzip_reads:`**
 <blockquote>
- 
+
    In this first process, we prepare our fastq files for the next steps. We take the fastq files from the `Channel` we opened and unzip them. The unzipped fastq files and their respective sample names are passed into a new `Channel`, ***reads_unzipped_ch***, as output to be used in the following process.
 
 </blockquote>
 
 ### Step 2: TraCeR Assembly
-  
+
    In this step, we assemble the reads using TraCeR.
 
    **`process assemble:`**
 <blockquote>
- 
+
    This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR sequences. The reads are assembled asynchronously and the output is published to a specified `S3 Bucket`. The bucket contains subdirectories for each sample with the output from Bowtie2, Trinity, IgBlast, Kallisto and Salmon as well as files describing the TCR sequences that were assembled.
 
    The path to the directory containing all the above information is output into a new `Channel`, ***assembled_ch***, which will be used for the last step.
-   
+
 </blockquote>
 
 ### Step 3: TraCeR Summarize
-  
+
    Finally, in this last step we summarize the TCR recovery rates as well as generate clonotype networks from the assembled reads.
- 
+
    **`process summarize:`**
  <blockquote>
- 
+
    This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is it collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for `tracer summarize`. The output contains summary statistics describing successful TCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same S3 bucket.
-   
+
 </blockquote>
 
-<img src="/images/tracer-bracer/nextflow-logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/tracer-bracer/aws-logo.png" alt="aws batch" width="40%" height="40%">
+<img src="/images/nextflow-tracer/nextflow_logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/nextflow-tracer/aws_batch.png" alt="aws batch" width="40%" height="40%">
