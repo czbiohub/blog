@@ -1,7 +1,7 @@
 ---
 layout: post
 mathjax: true
-title: TraCeR Pipeline as a Nextflow workflow
+title: TraCeR & BraCeR Pipeline: Nextflow Workflows
 date: 2019-09-06
 author: Clarissa Vazquez-Ramos
 ---
@@ -28,7 +28,7 @@ Nextflow also has the capability to run pipelines on [AWS Batch](https://docs.aw
 ## The Implementation
 The implementation performs 3 tasks which are linked together through `Channels`. A `Channel` has 2 major properties: sending messages and receiving data. A `Channel` sends messages in an asynchronous manner in which the operation will complete immediately, without having to wait for the receiving process. It will also receive data, which is a blocking operation where the receiving process is stopped until the message has arrived.
 <p align="center">
-<img src="/images/nextflow-tracer/workflow.png" alt="nextflow workflow" width="70%" height="70%">
+<img src="/images/tracer-bracer/nf-workflow.png" alt="nextflow workflow" width="70%" height="70%">
 </p> 
 
  ### Step 1: Preparation
@@ -66,4 +66,4 @@ The implementation performs 3 tasks which are linked together through `Channels`
    
 </blockquote>
 
-<img src="/images/nextflow-tracer/nextflow_logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/nextflow-tracer/aws_batch.png" alt="aws batch" width="40%" height="40%">
+<img src="/images/tracer-bracer/nextflow-logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/tracer-bracer/aws-logo.png" alt="aws batch" width="40%" height="40%">
