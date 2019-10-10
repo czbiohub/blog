@@ -1,69 +1,86 @@
 ---
 layout: post
 mathjax: true
-title: TraCeR Pipeline as a Nextflow workflow
-date: 2019-09-06
+title: TraCeR & BraCeR
+date: 2019-10-12
 author: Clarissa Vazquez-Ramos
 ---
 
+We are interested in how the immune system changes with age, and we accomplish that by building a clonal landscape of T and B cells to illustrate the diversity of the immune repertoire.
 
-## TraCeR and its Modes
-[TraCeR](https://github.com/Teichlab/tracer) has 3 modes, but of the 3 modes we use only 2: *assemble* and *summarize*
+<img style="float: right;" src="/images/tracer-bracer/bcell.png" width="20%" height="35%">
 
-1. ***Assemble*** takes fastq files of paired-end RNA-seq reads from single-cells and reconstructs TCR sequences and for each cell, an output directory is created that contains subdirectories with output from Bowtie2, Trinity, IgBlast, Kallisto and Salmon as well as files describing the TCR sequences that were assembled.
+## What are T and B Cells?
+T and B cells are lymphocytes (white blood cells) and active participants of the immune system. They both undergo V(D)J recombination--a process in which their DNA is shuffled--in order to develop receptors to potentially recognize foreign entities in the body, such as viruses. A receptor lies on the surface of the cell and expresses unique biological code that recognizes a specific antigen. You can think of it like a puzzle, where only one side of a puzzle piece is designed to fit with another. The difference between a T cells and a B cells therein lies in how they interact with a virus, an antigen presenting cell.
 
-2. ***Summarize*** takes a directory output from the ***assemble*** phase of several cells and summarizes the TCR recovery rates as well as generate clonotype networks from the assembled reads.
+A T cell will attack and kill an antigen presenting cell directly. A B cell will secrete antibodies, leading it to turn into a plasma cell, and eventually lysing and releasing antibodies into the bloodstream.
+<p align="center">
+<img src="/images/tracer-bracer/tcell-bcell.png" alt="tcell vs bcell" width="40%" height="40%">
+</p>
 
-We run the above modes on our mice single-cell data to identify cells that have the same receptor sequences. This can indicate that the cells are derived from the same original clonally-expanded cell.
+When T and B cells encounter antigen presenting cells, they undergo clonal expansion. Clonal expansion is a process in which T and B cells will multiply in order to fight off antigen presenting cells. We are able explore the clonal expansions by using the tools TraCeR & BraCeR.
 
-Our TraCeR pipeline is currently ran from command line prompts and on AWS Batch. While this method already efficiently runs the pipeline, there is no straight forward approach to run other of the TraCeR tasks consecutively; Nextflow solves this problem.
+## TraCeR & BraCeR Core Functions
+
+[TraCeR](https://github.com/Teichlab/tracer) were developed specifically to handle single cell data. It's main purpose is to reconstruct the sequences of TCR and BCR genes and identify cells that have the same receptor sequence. The 2 modes that perform this are *assemble* and *summarize*
+<img style="float: right;" src="/images/tracer-bracer/tracer-bracer-fn.png" alt="tracer-bracer core functions" width="20%" height="20%">
+1. ***Assemble*** is almost identical in both TraCeR and BraCeR. They both take paired-end scRNA-seq reads and reconstruct their TCR/BCR sequences. The reconstructed sequences are used to identify cells that have the same receptor sequence. Reconstruction is accomplished with the following steps: alignment, de novo assembly, IgBlast, and TCR/BCR expression quantification. BraCeR takes an extra step to perform a BLAST search before IgBlast.
+For each cell, an output directory is created with output from Bowtie2, Trinity, (BLAST), IgBlast, and Salmon as well as files describing the TCR sequences that were assembled.
+
+
+2. ***Summarize*** takes a directory output from the ***assemble*** phase of several cells and summarizes the TCR recovery rates as well as generate clonotype networks from the assembled reads. This step helps us identify cells that have undergone clonal expansion.
+
+Currently, we run TraCeR and BraCeR on AWS Batch by manually submitting the jobs. We submit thousands of cells to be assembled asynchronously, then we pull the assembled cells down and summarize them to identify clonal groups. While this method already accomplishes our goal, we wanted to find a way to improve the reproducibility of the pipeline. Thus, we found Nextflow.
 
 
 ## What is Nextflow?
-[Nextflow](https://www.nextflow.io/) allows for scalable and reproducible scientific workflows using containers. It simplifies the implementation and deployment of complex, parallel workflows. Because Nextflow is based on the dataflow programming model, you can effortlessly link processes together in one workflow.
+[Nextflow](https://www.nextflow.io/) is a workflow manager which allows for scalable and reproducible scientific workflows using containers. It simplifies the implementation and deployment of complex, parallel workflows, which is necessary for the thousands of single cell data we process. Because Nextflow is based on the dataflow programming model, you can effortlessly link processes together in one workflow.
 
 Nextflow also has the capability to run pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) without having to deal with the AWS interface.
 
 
 ## The Implementation
-The implementation performs 3 tasks which are linked together through `Channels`. A `Channel` has 2 major properties: sending messages and receiving data. A `Channel` sends messages in an asynchronous manner in which the operation will complete immediately, without having to wait for the receiving process. It will also receive data, which is a blocking operation where the receiving process is stopped until the message has arrived.
+The implementation performs 3 steps which are linked together through `Channels`. A `Channel` has 2 major properties: sending messages and receiving data. A `Channel` sends messages in an asynchronous manner in which the operation will complete immediately, without having to wait for the receiving process. It will also receive data, which is a blocking operation where the receiving process is stopped until the message has arrived. The figure below illustrates how the workflow manages the 3 different steps. Steps 1 and 2 are handled asynchronously while Step 3 relies on the completion of Step 2 before starting.
 <p align="center">
-<img src="/images/nextflow-tracer/workflow.png" alt="nextflow workflow" width="70%" height="70%">
+<img src="/images/tracer-bracer/nf-workflow.png" alt="nextflow workflow" width="70%" height="70%">
 </p>
 
+
+<img style="float: right;" src="/images/tracer-bracer/nf-tracer.gif" alt="nf-tracer run" width="50%" height="40%">
+
  ### Step 1: Preparation
+The first step is to open a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. In our case, the file pairs returned are the sample names and the fastq files. These file pairs are then used as input for the first process.
 
-   The first step is to create a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. In our case, the file pairs returned are the sample names and their fastq files of paired-end RNA-seq reads from single-cell. These file pairs are then used as input for the first process.
-
-   **`process unzip_reads:`**
+**`process unzip_reads:`**
 <blockquote>
-
-   In this first process, we prepare our fastq files for the next steps. We take the fastq files from the `Channel` we opened and unzip them. The unzipped fastq files and their respective sample names are passed into a new `Channel`, ***reads_unzipped_ch***, as output to be used in the following process.
-
+In this first process, we prepare our fastq files for the next steps. We take the fastq files from the `Channel` we opened and unzip them. The unzipped fastq files and their respective sample names are passed into a new `Channel`, ***reads_unzipped_ch***, as output to be used in the following process.
 </blockquote>
 
-### Step 2: TraCeR Assembly
+### Step 2: TraCeR/BraCeR Assembly
+In this step, we assemble the reads.
 
-   In this step, we assemble the reads using TraCeR.
-
-   **`process assemble:`**
+**`process assemble:`**
 <blockquote>
-
-   This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR sequences. The reads are assembled asynchronously and the output is published to a specified `S3 Bucket`. The bucket contains subdirectories for each sample with the output from Bowtie2, Trinity, IgBlast, Kallisto and Salmon as well as files describing the TCR sequences that were assembled.
-
-   The path to the directory containing all the above information is output into a new `Channel`, ***assembled_ch***, which will be used for the last step.
-
+This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR/BCR sequences. The reads are assembled asynchronously and the output is published to a specified directory. The directory is then output into a new `Channel`, ***assembled_ch***, which will be used for the last step.
 </blockquote>
 
-### Step 3: TraCeR Summarize
+### Step 3: TraCeR/BraCeR Summarize
+Finally, in this last step we summarize the TCR/BCR recovery rates as well as generate clonotype networks from the assembled reads.
 
-   Finally, in this last step we summarize the TCR recovery rates as well as generate clonotype networks from the assembled reads.
-
-   **`process summarize:`**
+**`process summarize:`**
  <blockquote>
-
-   This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is it collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for `tracer summarize`. The output contains summary statistics describing successful TCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same S3 bucket.
-
+This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for `tracer/bracer summarize`. The output contains summary statistics describing successful TCR/BCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same directory where the assembled files are.
 </blockquote>
 
-<img src="/images/nextflow-tracer/nextflow_logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/nextflow-tracer/aws_batch.png" alt="aws batch" width="40%" height="40%">
+### Step 4: Visualization
+Different visualizations you could create with output from TraCeR/BraCeR are clonal trees, clonal networks, pie charts, etc. A clonal network can help us landscape a cell population's clonal groups. For example, in the figures below we visualize the landscape of our MACA data by observing the number of clones for 2 age groups: 3 months and 24 months. This network shows us that number of clones have increased with age. If we look at the distribution of clonal cells vs. singletons (non-clonal cells) through a pie chart instead, we see that the ratios of singletons to clonal cells have changed.
+
+<img style="float: right;" src="/images/tracer-bracer/bracer-output.png" alt="bracer output" width="50%" height="30%">
+<img src="/images/tracer-bracer/tracer-output.png" alt="tracer output" width="50%" height="40%">
+<p align="center">
+<img src="/images/tracer-bracer/legend.png" alt="legend" width="50%" height="50%">
+</p>
+
+
+
+<img src="/images/tracer-bracer/nextflow-logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/tracer-bracer/aws-logo.png" alt="aws batch" width="40%" height="40%">
