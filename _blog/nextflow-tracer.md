@@ -8,9 +8,9 @@ author: Clarissa Vazquez-Ramos
 
 We are interested in how the immune system changes with age, and we accomplish that by building a clonal landscape of T and B cells to illustrate the diversity of the immune repertoire.
 
-<img style="float: right;" src="/images/tracer-bracer/bcell.png" width="20%" height="35%">
 
 ## What are T and B Cells?
+<img style="float: right;" src="/images/tracer-bracer/bcell.png" width="20%" height="35%">
 T and B cells are lymphocytes (white blood cells) and active participants of the immune system. They both undergo V(D)J recombination--a process in which their DNA is shuffled--in order to develop receptors to potentially recognize foreign entities in the body, such as viruses. A receptor lies on the surface of the cell and expresses unique biological code that recognizes a specific antigen. You can think of it like a puzzle, where only one side of a puzzle piece is designed to fit with another. The difference between a T cells and a B cells therein lies in how they interact with a virus, an antigen presenting cell.
 
 A T cell will attack and kill an antigen presenting cell directly. A B cell will secrete antibodies, leading it to turn into a plasma cell, and eventually lysing and releasing antibodies into the bloodstream.
@@ -21,12 +21,11 @@ A T cell will attack and kill an antigen presenting cell directly. A B cell will
 When T and B cells encounter antigen presenting cells, they undergo clonal expansion. Clonal expansion is a process in which T and B cells will multiply in order to fight off antigen presenting cells. We are able explore the clonal expansions by using the tools TraCeR & BraCeR.
 
 ## TraCeR & BraCeR Core Functions
-
-[TraCeR](https://github.com/Teichlab/tracer) were developed specifically to handle single cell data. It's main purpose is to reconstruct the sequences of TCR and BCR genes and identify cells that have the same receptor sequence. The 2 modes that perform this are *assemble* and *summarize*
 <img style="float: right;" src="/images/tracer-bracer/tracer-bracer-fn.png" alt="tracer-bracer core functions" width="20%" height="20%">
+TraCeR and BraCeR were developed specifically to handle single cell data. It's main purpose is to reconstruct the sequences of TCR and BCR genes and identify cells that have the same receptor sequence. The 2 modes that perform this are *assemble* and *summarize*
+
 1. ***Assemble*** is almost identical in both TraCeR and BraCeR. They both take paired-end scRNA-seq reads and reconstruct their TCR/BCR sequences. The reconstructed sequences are used to identify cells that have the same receptor sequence. Reconstruction is accomplished with the following steps: alignment, de novo assembly, IgBlast, and TCR/BCR expression quantification. BraCeR takes an extra step to perform a BLAST search before IgBlast.
 For each cell, an output directory is created with output from Bowtie2, Trinity, (BLAST), IgBlast, and Salmon as well as files describing the TCR sequences that were assembled.
-
 
 2. ***Summarize*** takes a directory output from the ***assemble*** phase of several cells and summarizes the TCR recovery rates as well as generate clonotype networks from the assembled reads. This step helps us identify cells that have undergone clonal expansion.
 
