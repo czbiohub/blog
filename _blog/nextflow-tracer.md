@@ -50,11 +50,9 @@ The implementation performs 3 steps which are linked together through `Channels`
 The first step is to open a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. In our case, the file pairs returned are the sample names and the fastq files. These file pairs are then used as input for the first process.
 
 **`process unzip_reads:`**
-<blockquote>
- 
+
 In this first process, we prepare our fastq files for the next steps. We take the fastq files from the `Channel` we opened and unzip them. The unzipped fastq files and their respective sample names are passed into a new `Channel`, ***reads_unzipped_ch***, as output to be used in the following process.
 
-</blockquote>
 
 ### Step 2: TraCeR/BraCeR Assembly
 In this step, we assemble the reads.
