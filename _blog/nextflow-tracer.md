@@ -23,7 +23,7 @@ When T and B cells encounter antigen presenting cells, they undergo clonal expan
 
 ## TraCeR & BraCeR Core Functions
 <img align="right" src="/images/tracer-bracer/tracer-bracer-fn.png" alt="tracer-bracer core functions" width="28%" height="28%">
-TraCeR and BraCeR were developed specifically to handle single cell data. It's main purpose is to reconstruct the sequences of TCR and BCR genes and identify cells that have the same receptor sequence. The 2 modes that perform this are *assemble* and *summarize*
+TraCeR and BraCeR were developed specifically to handle single cell data. Their main purpose is to reconstruct the sequences of TCR and BCR genes and identify cells that have the same receptor sequence. The two modes that perform this are *assemble* and *summarize*
 
 1. ***Assemble*** is almost identical in both TraCeR and BraCeR. They both take paired-end scRNA-seq reads and reconstruct their TCR/BCR sequences. The reconstructed sequences are used to identify cells that have the same receptor sequence. Reconstruction is accomplished with the following steps: alignment, de novo assembly, IgBlast, and TCR/BCR expression quantification. BraCeR takes an extra step to perform a BLAST search before IgBlast.
 For each cell, an output directory is created with output from Bowtie2, Trinity, (BLAST), IgBlast, and Salmon as well as files describing the TCR sequences that were assembled.
