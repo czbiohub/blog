@@ -34,7 +34,7 @@ Currently, we run TraCeR and BraCeR on AWS Batch by manually submitting the jobs
 
 
 ## What is Nextflow?
-[Nextflow](https://www.nextflow.io/) is a workflow manager which allows for scalable and reproducible scientific workflows using containers. It simplifies the implementation and deployment of complex, parallel workflows, which is necessary for the thousands of single cell data we process. Because Nextflow is based on the dataflow programming model, you can effortlessly link processes together in one workflow.
+[Nextflow](https://www.nextflow.io/) is a workflow manager which allows for scalable and reproducible scientific workflows using containers. It simplifies the implementation and deployment of complex, parallel workflows, which is necessary for the thousands of single cells we process. Because Nextflow is based on the dataflow programming model, you can effortlessly link processes together in one workflow.
 
 Nextflow also has the capability to run pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) without having to deal with the AWS interface.
 
