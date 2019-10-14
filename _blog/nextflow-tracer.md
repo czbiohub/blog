@@ -2,7 +2,7 @@
 layout: post
 mathjax: true
 title: TraCeR & BraCeR
-date: 2019-10-12
+date: 2019-10-19
 author: Clarissa Vazquez-Ramos
 ---
 
