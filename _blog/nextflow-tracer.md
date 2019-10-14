@@ -28,7 +28,7 @@ TraCeR and BraCeR were developed specifically to handle single cell data. Their 
 1. ***Assemble*** is almost identical in both TraCeR and BraCeR. They both take paired-end scRNA-seq reads and reconstruct their TCR/BCR sequences. The reconstructed sequences are used to identify cells that have the same receptor sequence. Reconstruction is accomplished with the following steps: alignment, de novo assembly, IgBlast, and TCR/BCR expression quantification. BraCeR takes an extra step to perform a BLAST search before IgBlast.
 For each cell, an output directory is created with output from Bowtie2, Trinity, (BLAST), IgBlast, and Salmon as well as files describing the TCR sequences that were assembled.
 
-2. ***Summarize*** takes a directory output from the ***assemble*** phase of several cells and summarizes the TCR recovery rates as well as generate clonotype networks from the assembled reads. This step helps us identify cells that have undergone clonal expansion.
+2. ***Summarize*** takes the directories output from the ***assemble*** phase of several cells, summarizes the TCR recovery rates, and generates clonotype networks from the assembled reads. This step helps us identify cells that have undergone clonal expansion.
 
 Currently, we run TraCeR and BraCeR on AWS Batch by manually submitting the jobs. We submit thousands of cells to be assembled asynchronously, then we pull the assembled cells down and summarize them to identify clonal groups. While this method already accomplishes our goal, we wanted to find a way to improve the reproducibility of the pipeline. Thus, we found Nextflow.
 
