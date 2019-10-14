@@ -70,6 +70,7 @@ Finally, in this last step we summarize the TCR/BCR recovery rates as well as ge
 This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for `tracer/bracer summarize`. The output contains summary statistics describing successful TCR/BCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same directory where the assembled files are.
 </blockquote>
 
+
 ![nf-tracer run](/images/tracer-bracer/nf-tracer.gif)
 
 
