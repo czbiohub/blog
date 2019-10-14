@@ -51,7 +51,9 @@ The first step is to open a `Channel` using the method [`.fromFilePairs()`](http
 
 **`process unzip_reads:`**
 <blockquote>
+ 
 In this first process, we prepare our fastq files for the next steps. We take the fastq files from the `Channel` we opened and unzip them. The unzipped fastq files and their respective sample names are passed into a new `Channel`, ***reads_unzipped_ch***, as output to be used in the following process.
+
 </blockquote>
 
 ### Step 2: TraCeR/BraCeR Assembly
@@ -59,7 +61,9 @@ In this step, we assemble the reads.
 
 **`process assemble:`**
 <blockquote>
+ 
 This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR/BCR sequences. The reads are assembled asynchronously and the output is published to a specified directory. The directory is then output into a new `Channel`, ***assembled_ch***, which will be used for the last step.
+ 
 </blockquote>
 
 ### Step 3: TraCeR/BraCeR Summarize
@@ -67,12 +71,12 @@ Finally, in this last step we summarize the TCR/BCR recovery rates as well as ge
 
 **`process summarize:`**
  <blockquote>
+
 This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for `tracer/bracer summarize`. The output contains summary statistics describing successful TCR/BCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same directory where the assembled files are.
+
 </blockquote>
 
-
 ![nf-tracer run](/images/tracer-bracer/nf-tracer.gif)
-
 
 ### Step 4: Visualization
 Different visualizations you could create with output from TraCeR/BraCeR are clonal trees, clonal networks, pie charts, etc. A clonal network can help us landscape a cell population's clonal groups. For example, in the figures below we visualize the landscape of our MACA data by observing the number of clones for 2 age groups: 3 months and 24 months. This network shows us that number of clones have increased with age. If we look at the distribution of clonal cells vs. singletons (non-clonal cells) through a pie chart instead, we see that the ratios of singletons to clonal cells have changed.
