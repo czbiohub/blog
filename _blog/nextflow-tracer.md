@@ -70,10 +70,8 @@ Finally, in this last step we summarize the TCR/BCR recovery rates as well as ge
 This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for `tracer/bracer summarize`. The output contains summary statistics describing successful TCR/BCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same directory where the assembled files are.
 </blockquote>
 
+![nf-tracer run](/images/tracer-bracer/nf-tracer.gif)
 
-<p align="center">
-<img src="/images/tracer-bracer/nf-tracer.gif" alt="nf-tracer run" width="60%" height="60%">
-</p>
 
 ### Step 4: Visualization
 Different visualizations you could create with output from TraCeR/BraCeR are clonal trees, clonal networks, pie charts, etc. A clonal network can help us landscape a cell population's clonal groups. For example, in the figures below we visualize the landscape of our MACA data by observing the number of clones for 2 age groups: 3 months and 24 months. This network shows us that number of clones have increased with age. If we look at the distribution of clonal cells vs. singletons (non-clonal cells) through a pie chart instead, we see that the ratios of singletons to clonal cells have changed.
