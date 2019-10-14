@@ -10,18 +10,19 @@ We are interested in how the immune system changes with age, and we accomplish t
 
 
 ## What are T and B Cells?
-<img style="float: right;" src="/images/tracer-bracer/bcell.png" width="20%" height="35%">
+<img align="right" src="/images/tracer-bracer/bcell.png" width="25%" height="25%">
 T and B cells are lymphocytes (white blood cells) and active participants of the immune system. They both undergo V(D)J recombination--a process in which their DNA is shuffled--in order to develop receptors to potentially recognize foreign entities in the body, such as viruses. A receptor lies on the surface of the cell and expresses unique biological code that recognizes a specific antigen. You can think of it like a puzzle, where only one side of a puzzle piece is designed to fit with another. The difference between a T cells and a B cells therein lies in how they interact with a virus, an antigen presenting cell.
 
 A T cell will attack and kill an antigen presenting cell directly. A B cell will secrete antibodies, leading it to turn into a plasma cell, and eventually lysing and releasing antibodies into the bloodstream.
+
 <p align="center">
 <img src="/images/tracer-bracer/tcell-bcell.png" alt="tcell vs bcell" width="40%" height="40%">
 </p>
 
-When T and B cells encounter antigen presenting cells, they undergo clonal expansion. Clonal expansion is a process in which T and B cells will multiply in order to fight off antigen presenting cells. We are able explore the clonal expansions by using the tools TraCeR & BraCeR.
+When T and B cells encounter antigen presenting cells, they undergo clonal expansion. Clonal expansion is a process in which T and B cells will multiply in order to fight off antigen presenting cells. We are able explore clonal expansion on our cells by using the tools TraCeR & BraCeR.
 
 ## TraCeR & BraCeR Core Functions
-<img style="float: right;" src="/images/tracer-bracer/tracer-bracer-fn.png" alt="tracer-bracer core functions" width="20%" height="20%">
+<img align="right" src="/images/tracer-bracer/tracer-bracer-fn.png" alt="tracer-bracer core functions" width="28%" height="28%">
 TraCeR and BraCeR were developed specifically to handle single cell data. It's main purpose is to reconstruct the sequences of TCR and BCR genes and identify cells that have the same receptor sequence. The 2 modes that perform this are *assemble* and *summarize*
 
 1. ***Assemble*** is almost identical in both TraCeR and BraCeR. They both take paired-end scRNA-seq reads and reconstruct their TCR/BCR sequences. The reconstructed sequences are used to identify cells that have the same receptor sequence. Reconstruction is accomplished with the following steps: alignment, de novo assembly, IgBlast, and TCR/BCR expression quantification. BraCeR takes an extra step to perform a BLAST search before IgBlast.
@@ -45,9 +46,7 @@ The implementation performs 3 steps which are linked together through `Channels`
 </p>
 
 
-<img style="float: right;" src="/images/tracer-bracer/nf-tracer.gif" alt="nf-tracer run" width="50%" height="40%">
-
- ### Step 1: Preparation
+### Step 1: Preparation
 The first step is to open a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. In our case, the file pairs returned are the sample names and the fastq files. These file pairs are then used as input for the first process.
 
 **`process unzip_reads:`**
@@ -71,15 +70,17 @@ Finally, in this last step we summarize the TCR/BCR recovery rates as well as ge
 This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for `tracer/bracer summarize`. The output contains summary statistics describing successful TCR/BCR reconstruction rates as well information on the cells and which clonal groups they belong to. The output is published to the same directory where the assembled files are.
 </blockquote>
 
+
+<p align="center">
+<img src="/images/tracer-bracer/nf-tracer.gif" alt="nf-tracer run" width="60%" height="60%">
+</p>
+
 ### Step 4: Visualization
 Different visualizations you could create with output from TraCeR/BraCeR are clonal trees, clonal networks, pie charts, etc. A clonal network can help us landscape a cell population's clonal groups. For example, in the figures below we visualize the landscape of our MACA data by observing the number of clones for 2 age groups: 3 months and 24 months. This network shows us that number of clones have increased with age. If we look at the distribution of clonal cells vs. singletons (non-clonal cells) through a pie chart instead, we see that the ratios of singletons to clonal cells have changed.
 
-<img style="float: right;" src="/images/tracer-bracer/bracer-output.png" alt="bracer output" width="50%" height="30%">
-<img src="/images/tracer-bracer/tracer-output.png" alt="tracer output" width="50%" height="40%">
+<img align="right" src="/images/tracer-bracer/bracer-output.png" alt="bracer output" width="48%" height="48%">
+<img src="/images/tracer-bracer/tracer-output.png" alt="tracer output" width="48%" height="48%">
 <p align="center">
 <img src="/images/tracer-bracer/legend.png" alt="legend" width="50%" height="50%">
 </p>
 
-
-
-<img src="/images/tracer-bracer/nextflow-logo.png" alt="nextflow logo" width="30%" height="30%"><img src="/images/tracer-bracer/aws-logo.png" alt="aws batch" width="40%" height="40%">
