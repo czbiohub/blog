@@ -11,7 +11,7 @@ We are interested in how the immune system changes with age, and we accomplish t
 
 ## What are T and B Cells?
 <img align="right" src="/images/tracer-bracer/bcell.png" width="25%" height="25%">
-T and B cells are lymphocytes (white blood cells) and active participants of the immune system. They both undergo V(D)J recombination--a process in which their DNA is shuffled--in order to develop receptors to potentially recognize foreign entities in the body, such as viruses. A receptor lies on the surface of the cell and expresses unique biological code that recognizes a specific antigen. You can think of it like a puzzle, where only one side of a puzzle piece is designed to fit with another. The difference between a T cells and a B cells therein lies in how they interact with a virus, an antigen presenting cell.
+T and B cells are lymphocytes (white blood cells) and active participants of the immune system. They both undergo V(D)J recombination--a process in which their DNA is shuffled--in order to develop receptors to potentially recognize foreign entities in the body, such as viruses. A receptor lies on the surface of the cell and expresses unique biological code that recognizes a specific antigen. You can think of it like a puzzle, where only one side of a puzzle piece is designed to fit with another. The difference between T cells and B cells lies in how they interact with external threats and antigen-presenting cells.
 
 A T cell will attack and kill an antigen presenting cell directly. A B cell will secrete antibodies, leading it to turn into a plasma cell, and eventually lysing and releasing antibodies into the bloodstream.
 
