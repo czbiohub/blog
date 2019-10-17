@@ -17,7 +17,7 @@ T and B cells are lymphocytes and active participants of the adaptive immune res
 A T cell attacks and kills an antigen-presenting cell directly. A B cell secretes antibodies, leading it to become a plasma cell with several antibodies, and eventually lysing and releasing its antibodies into the bloodstream.
 
 <p align="center">
-<img src="/images/tracer-bracer/tcell-bcell.png" alt="tcell vs bcell" width="40%" height="40%">
+<img src="/images/tracer-bracer/tcell-bcell.png" alt="tcell vs bcell" width="45%" height="45%">
 </p>
 
 When T and B cells encounter antigen-presenting cells, they undergo clonal expansion—a process in which T and B cells form clones of themselves to fight off pathogens, and remember them for future encounters. It is important to note though that when B cells clone themselves, they experience random mutations (hypermutation) to increase the binding affinity of their antibodies to antigens.  
@@ -25,7 +25,7 @@ When T and B cells encounter antigen-presenting cells, they undergo clonal expan
 We can explore clonal expansion in our single cells with the tools TraCeR and BraCeR.
 
 ## TraCeR & BraCeR Core Functions
-<img align="right" src="/images/tracer-bracer/tracer-bracer-fn.png" alt="tracer-bracer core functions" width="28%" height="28%">
+<img align="right" src="/images/tracer-bracer/tracer-bracer-fn.png" alt="tracer-bracer core functions" width="30%" height="30%">
 
 [TraCeR](https://github.com/teichlab/tracer) and [BraCeR](https://github.com/teichlab/bracer) were developed specifically to handle single-cell data. The tools serve to reconstruct the sequences of TCR and BCR genes and identify cells that have the same receptor sequence. The two modes that perform this are *assemble* and *summarize*.
 
