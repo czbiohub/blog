@@ -67,7 +67,7 @@ In this step, we assemble the reads.
 
 
 ### Step 3: TraCeR and BraCeR Summarize
-Finally, in this last step we generate summary statistics describing successful TCR and BCR recovery and reconstruction rates. In addition, TraCeR summarize generates clone assignments for the TCRs.
+Finally, in this last step we generate summary statistics and begin clone assignment.
 
 **`process summarize:`**
 > This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for our `summarize` step. The output is published to the same directory where the assembled files are.
