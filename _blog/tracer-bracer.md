@@ -12,9 +12,9 @@ We are interested in how the immune system changes with age, and we accomplish t
 ## What are T and B Cells?
 <img align="right" src="/images/tracer-bracer/bcell.png" width="25%" height="25%">
 
-T and B cells are lymphocytes and active participants of the adaptive immune response. These cells use the molecules on their surface, T cell receptors (TCR) and B cell receptors (BCR), to recognize pathogens in the body, such as a virus. T and B cells undergo V(D)J recombination — a process in which their DNA is shuffled — in order to develop their receptor which can potentially recognize pathogens. TCRs and BCRs accomplish this with the unique biological code they express in which can identify only a *specific antigen*; it can be thought of as two puzzle pieces that are meant to fit together. Although T and B cells serve the same purpose as participants in the adaptive immune response, the difference therein lies in their interactions with antigen-presenting cells and clonal expansion.
+T and B cells are lymphocytes and active participants of the adaptive immune response. These cells use the molecules on their surface, T cell receptors (TCR) and B cell receptors (BCR), to recognize pathogens in the body, such as a virus. T and B cells undergo V(D)J recombination — a process in which their DNA is shuffled — in order to develop their receptor which can potentially recognize pathogens. TCRs and BCRs accomplish this with the unique biological code they express in which can identify only a *specific antigen*; it can be thought of as two puzzle pieces meant to fit together. Although T and B cells serve the same purpose as participants in the adaptive immune response, the difference therein lies in their interactions with antigen-presenting cells and clonal expansion.
 
-A T cell attacks and kills an antigen-presenting cell directly. When the B cell receptor recognizes its cognate antigen, it secretes several free forms of its receptor (antibodies) with identical binding sites. These antibodies are what latch onto the antigen and mark it for destruction by other cells.
+A T cell attacks and kills an antigen-presenting cell directly. When the B cell receptor recognizes its cognate antigen, it secretes several free forms of its receptor (antibodies). These antibodies are what latch onto the antigen and mark it for destruction by other cells.
 
 <p align="center">
 <img src="/images/tracer-bracer/tcell-bcell.png" alt="tcell vs bcell" width="45%" height="45%">
@@ -36,7 +36,7 @@ For each cell, an output directory is created with output from Bowtie2, Trinity,
 
 For TraCeR, we don't need to take any further steps after `summarize`, as we have the clonal groups already assigned. For BraCeR, extra steps outside of the tool are necessary to generate clone assignments. Clone assignment is accomplished by first dividing the antibody heavy chain variable region (VH) sequences into groups which contain the same V and J genes and CDR3 length. A clone assignment is made if the amino acid CDR3 sequence shares *similarity* with other members within its groups.
 
-Overall, these tools helps us identify single cells that have undergone clonal expansion. We currently run TraCeR and BraCeR analysis pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) by manually submitting the jobs. We submit thousands of cells to be assembled asynchronously, then pull the assembled cells down and summarize them to identify clonal groups. While this workflow already carries out the analysis, we wanted to improve the reproducibility of the pipeline. Thus, we turned to Nextflow.
+Overall, these tools helps us identify single cells that have undergone clonal expansion. We currently run TraCeR and BraCeR analysis pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) by manually submitting the jobs. We submit thousands of cells to be assembled asynchronously, then pull the assembled cells down and summarize them to identify clonal groups. While this workflow already carries out the analysis, we wanted to improve its reproducibility. Thus, we turned to Nextflow.
 
 
 ## What is Nextflow?
@@ -53,24 +53,24 @@ The implementation performs three steps which are linked together through `Chann
 
 
 ### Step 1: Preparation
-The first step is to open a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. In this case, the file pairs returned are the sample names and the fastq files. These file pairs are then used as input for the first process.
+The first step is to prepare the reads for the next processes. In this specific workflow, zipped fastq pair files are expected. Unzipping them first is necessary as the next steps only work wit unzipped files.
 
 **`process unzip_reads:`**
-> In this first process, we prepare the fastq files for the next steps. We take the fastq files from the `Channel` we opened and unzip them. The unzipped fastq files and their respective sample names are passed into a new `Channel`, ***reads_unzipped_ch***, as output to be used in the following process.
+> The first step is to open a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. The fastq files get unzipped and passed into a new `Channel`, ***reads_unzipped_ch***,for the following process.
 
 
-### Step 2: TraCeR and BraCeR Assembly
-In this step, we assemble the reads.
+### Step 2: Assembly
+In this step, we assemble the reads with either TraCeR or BraCeR. The figure below illustrates a run with TraCeR.
 
 **`process assemble:`**
-> This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR or BCR sequences, depending which pipeline is being ran. The reads are assembled asynchronously and the output is published to a user-specified directory. The directory is then output into a new `Channel`, ***assembled_ch***, which will be used in the last step.
+> This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR or BCR sequences, depending which analysis is being ran. The reads are assembled asynchronously and the output folders are published to a user-specified directory. These same folders are also passed into a new `Channel`, ***assembled_ch***, which will be used for the last process.
 
 
-### Step 3: TraCeR and BraCeR Summarize
+### Step 3: Summarize
 Finally, in this last step we generate summary statistics and begin clone assignment.
 
 **`process summarize:`**
-> This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. What this does is collects all the files emitted from ***assembled_ch*** into a list and uses that as the input for the `summarize` step. The output is published to the same directory where the assembled files are.
+> This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. This method collects all the files emitted from ***assembled_ch*** into a list and uses that as input for this process. The output is published to the same directory where the assembled files are.
 
 ![nf-tracer run](/images/tracer-bracer/nf-tracer.gif)
 
