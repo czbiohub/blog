@@ -20,7 +20,7 @@ A T cell attacks and kills an antigen-presenting cell directly. When the B cell 
 <img src="/images/tracer-bracer/tcell-bcell.png" alt="tcell vs bcell" width="45%" height="45%">
 </p>
 
-When T and B cells encounter antigen-presenting cells, they undergo clonal expansion — a process in which T and B cells form clones of themselves to fight off pathogens, and remember them for future encounters. It is important to note though that when B cells clone themselves, they experience random mutations (hypermutation) to increase the binding affinity of their antibodies to antigens.  
+When T and B cells encounter antigen-presenting cells, they undergo clonal expansion — a process in which T and B cells form clones of themselves to fight off pathogens, and remember them for future encounters. It is important to note though that when B cells proliferate, their receptors undergo hypermutation — a process in which BCRs are diversified to enable the immune system to adapt its responses to new threats. These mutations occur at an extremely high rate, so during clonal expansion thousands of B cells may possess slightly different receptors. The B cell with the highest affinity towards the antigen will be selected to produce antibodies.
 
 We can explore clonal expansion in single-cell datasets with the tools TraCeR and BraCeR.
 
