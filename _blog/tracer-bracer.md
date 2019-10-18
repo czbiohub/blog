@@ -32,9 +32,9 @@ We can explore clonal expansion in single-cell datasets with the tools TraCeR an
 1. ***Assemble*** is almost identical in both TraCeR and BraCeR. They both take paired-end scRNA-seq reads and reconstruct the TCR and BCR sequences. The reconstructed sequences are used to identify cells that have the same receptor sequence. Reconstruction is accomplished with the following steps: [alignment](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml), [de novo assembly](https://github.com/trinityrnaseq/trinityrnaseq/wiki), [IgBlast](http://www.ncbi.nlm.nih.gov/igblast/faq.html#standalone), and TCR and BCR [expression quantification](http://pachterlab.github.io/kallisto/). BraCeR takes an extra step to perform a [BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download) search before IgBlast.
 For each cell, an output directory is created with output from Bowtie2, Trinity, (BLAST), IgBlast, and Kallisto as well as files describing the TCR and BCR sequences that were assembled.
 
-2. ***Summarize*** takes the directories output from the ***assemble*** phase of several cells. Recall that B cells undergo hypermutation during clonal expansion, so the results in this step differ for TraCeR and BraCeR. In TraCeR, clone assignments are generated for each cell. In BraCeR, we receive the cells and their CDR3 sequences as output.
+2. ***Summarize*** takes the directories output from the ***assemble*** phase of several cells. Recall that B cells undergo hypermutation during clonal expansion, so the results in this step differ for TraCeR and BraCeR. In TraCeR, clone assignments are generated for each cell. In BraCeR, we receive a database file containing all the reconstructed sequences (e.g. CDR3, V and J).
 
-For TraCeR, we don't need to take any further steps after `summarize`, as we have the clonal groups already assigned. For BraCeR, extra steps outside of the tool are necessary to generate clone assignments. The CDR3 sequences must be translated into amino acid chains. These chains are used to identify cells with *similar* chains.
+For TraCeR, we don't need to take any further steps after `summarize`, as we have the clonal groups already assigned. For BraCeR, extra steps outside of the tool are necessary to generate clone assignments. Clone assignment is accomplished by first dividing the antibody heavy chain variable region (VH) sequences into groups which contain the same V and J genes and CDR3 length. A clone assignment is made if the amino acid CDR3 sequence shares *similarity* with other members within its groups.
 
 Overall, these tools helps us identify single cells that have undergone clonal expansion. We currently run TraCeR and BraCeR analysis pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) by manually submitting the jobs. We submit thousands of cells to be assembled asynchronously, then pull the assembled cells down and summarize them to identify clonal groups. While this workflow already carries out the analysis, we wanted to improve the reproducibility of the pipeline. Thus, we turned to Nextflow.
 
@@ -42,7 +42,7 @@ Overall, these tools helps us identify single cells that have undergone clonal e
 ## What is Nextflow?
 [Nextflow](https://www.nextflow.io/) is a workflow manager which allows for scalable and reproducible scientific workflows using containers. It simplifies the implementation and deployment of complex, parallel workflows, which is necessary for the thousands of single cells we process. Because Nextflow is based on the dataflow programming model, you can effortlessly link processes together in one workflow.
 
-Nextflow has the capability to run pipelines in the cloud (eg. AWS Batch) or locally.
+Nextflow has the capability to run pipelines in the cloud (e.g. AWS Batch) or locally.
 
 
 ## The Implementation
