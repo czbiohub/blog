@@ -80,7 +80,7 @@ Finally, in this last step we generate summary statistics and begin clone assign
 
 
 ### Step 4: Visualization
-Different visualizations you could create with output from TraCeR and BraCeR include clonal trees, clonal networks, pie charts, etc. A clonal network can help us visualize the landscape a cell population's clonal groups. For example, in the figures below we visualize the landscape of [Tabula Muris Senis](https://github.com/czbiohub/tabula-muris-senis) dataset by observing the number of clones for two age groups: 3 months and 24 months. This network shows us that the number of clones has increased with age. If we look at the distribution of clonal cells vs. singletons (non-clonal cells) through a pie chart instead, we see that the ratios of singletons to clonal cells have changed.
+Different visualizations you could create with output from TraCeR and BraCeR include clonal trees, clonal networks, pie charts, etc. A clonal network can help visualize the landscape of a cell population's clonal groups. For example, in the figures below we visualize the landscape of [Tabula Muris Senis](https://github.com/czbiohub/tabula-muris-senis) dataset by observing the number of clones for two age groups: 3 months and 24 months. This network shows us that the number of clones has increased with age. If we look at the distribution of clonal cells vs. singletons (non-clonal cells) through a pie chart instead, we see that the ratios of singletons to clonal cells have changed.
 
 <img align="right" src="/images/tracer-bracer/bracer-output.png" alt="bracer output" width="48%" height="48%">
 <img src="/images/tracer-bracer/tracer-output.png" alt="tracer output" width="48%" height="48%">
