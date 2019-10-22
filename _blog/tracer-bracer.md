@@ -72,7 +72,7 @@ In this step, we assemble the reads with either TraCeR or BraCeR. The figure bel
 ### Step 3: Summarize
 Finally, in this last step we generate summary statistics and begin clone assignment.
 
-**`process summarize:`**
+#### `process summarize:`
 * This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on `assembled_ch`. This method collects all the files emitted from `assembled_ch` into a list and uses that as input for this process.
 * ***Summarize*** mode is ran and the output is published to the same directory where the assembled files are.
 
