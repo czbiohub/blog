@@ -57,7 +57,7 @@ The first step is to prepare the reads for the next processes. In this specific 
 
 **`process unzip_reads:`**
 * The first step is to open a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user.
-* The file pairs get unzipped and passed into a new `Channel`, ***reads_unzipped_ch***,for the following process.
+* The file pairs get unzipped and passed into a new `Channel`, **reads_unzipped_ch**, for the following process.
 
 
 ### Step 2: Assembly
@@ -66,14 +66,14 @@ In this step, we assemble the reads with either TraCeR or BraCeR. The figure bel
 **`process assemble:`**
 * This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR or BCR sequences, depending which analysis is being ran.
 * The reads are assembled asynchronously and the output folders are published to a user-specified directory.
-* These same folders are also passed into a new `Channel`, ***assembled_ch***, which will be used for the last process.
+* These same folders are also passed into a new `Channel`, **assembled_ch**, which will be used for the last process.
 
 
 ### Step 3: Summarize
 Finally, in this last step we generate summary statistics and begin clone assignment.
 
 **`process summarize:`**
-* This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. This method collects all the files emitted from ***assembled_ch*** into a list and uses that as input for this process.
+* This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on `assembled_ch`. This method collects all the files emitted from `assembled_ch` into a list and uses that as input for this process.
 * ***Summarize*** mode is ran and the output is published to the same directory where the assembled files are.
 
 ![nf-tracer run](/images/tracer-bracer/nf-tracer.gif)
