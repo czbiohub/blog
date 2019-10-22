@@ -63,7 +63,7 @@ The first step is to prepare the reads for the next processes. In this specific 
 ### Step 2: Assembly
 In this step, we assemble the reads with either TraCeR or BraCeR. The figure below illustrates a run with TraCeR.
 
-**`process assemble:`**
+#### `process assemble`
 * This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR or BCR sequences, depending which analysis is being ran.
 * The reads are assembled asynchronously and the output folders are published to a user-specified directory.
 * These same folders are also passed into a new `Channel`, **assembled_ch**, which will be used for the last process.
