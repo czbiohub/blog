@@ -34,7 +34,7 @@ For each cell, an output directory is created with output from Bowtie2, Trinity,
 
 2. ***Summarize*** takes the directories output from the ***assemble*** phase of several cells. Recall that B cells undergo hypermutation during clonal expansion, so the results in this step differ for TraCeR and BraCeR. In TraCeR, clone assignments are generated for each cell. In BraCeR, we receive a database file containing all the reconstructed sequences (e.g. CDR3, V and J genes).
 
-For TraCeR, we don't need to take any further steps after ***summarize***, as we have the clonal groups already assigned. For BraCeR, extra steps outside of the tool are necessary to generate clone assignments. Clone assignment is accomplished by first dividing the antibody heavy chain variable region (VH) sequences into groups which contain the same V and J genes and CDR3 length. A clone assignment is made if a cell's amino acid CDR3 sequence shares *similarity* with other members within its groups. The similarity criteria is up to the investigators judgement.
+For TraCeR, we don't need to take any further steps after ***summarize***, as we have the clonal groups already assigned. For BraCeR, extra steps outside of the tool are necessary to generate clone assignments. Clone assignment is accomplished as described in the methods section of the [Croote et al.](https://science.sciencemag.org/content/362/6420/1306) paper. First the antibody heavy chain variable region (VH) sequences are divided into groups which contain the same V and J genes and CDR3 length. A clone assignment is made if a cell's amino acid CDR3 sequence shares *similarity* with other members within its groups. The similarity criteria is up to the investigators judgement.
 
 Overall, these tools helps us identify single cells that have undergone clonal expansion. We previously ran TraCeR and BraCeR analysis pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) by manually submitting [jobs](https://docs.aws.amazon.com/batch/latest/userguide/jobs.html). We submitted thousands of cells to be assembled asynchronously, then pulled the assembled cells down and summarized them to identify clonal groups. While this workflow carried out the analysis, we wanted to improve its reproducibility. Thus, we turned to Nextflow.
 
@@ -76,7 +76,7 @@ Finally, in this last step we generate summary statistics and begin clone assign
 * This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on `assembled_ch`. This method collects all the files emitted from `assembled_ch` into a list and uses that as input for this process.
 * ***Summarize*** mode is ran and the output is published to the same directory where the assembled files are.
 
-The figure below illustrates a run with TraCeR.
+The figure below illustrates a Nextflow run with TraCeR.
 
 ![nf-tracer run](/images/tracer-bracer/nf-tracer.gif)
 
