@@ -42,7 +42,7 @@ Overall, these tools helps us identify single cells that have undergone clonal e
 ## What is Nextflow?
 [Nextflow](https://www.nextflow.io/) is a workflow manager which allows for scalable and reproducible scientific workflows using containers. It simplifies the implementation and deployment of complex, parallel workflows, which is necessary for the thousands of single cells we process. Because Nextflow is based on the dataflow programming model, you can effortlessly link processes together in one workflow.
 
-Nextflow has the capability to run pipelines in the cloud (e.g. AWS Batch) or locally.
+Nextflow has the capability to run pipelines in the cloud (e.g. AWS Batch), on high performance compute cluster schedulers (e.g. LSF, SGE, SLURM, PBS), or locally.
 
 
 ## The Implementation
@@ -53,9 +53,9 @@ The implementation performs three steps which are linked together through `Chann
 
 
 ### Step 1: Preparation
-The first step is to prepare the reads for the next processes. In this specific workflow, zipped fastq pair files are expected. Unzipping them first is necessary as the next steps only work wit unzipped files.
+The first step is to prepare the reads for the next processes. In this specific workflow, zipped `fastq` pair files are expected. Unzipping them first is necessary as the next steps only work with unzipped files.
 
-**`process unzip_reads:`**
+#### `process unzip_reads`
 * The first step is to open a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user.
 * The file pairs get unzipped and passed into a new `Channel`, **reads_unzipped_ch**, for the following process.
 
@@ -63,7 +63,7 @@ The first step is to prepare the reads for the next processes. In this specific 
 ### Step 2: Assembly
 In this step, we assemble the reads with either TraCeR or BraCeR. The figure below illustrates a run with TraCeR.
 
-**`process assemble:`**
+#### `process assemble`
 * This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR or BCR sequences, depending which analysis is being ran.
 * The reads are assembled asynchronously and the output folders are published to a user-specified directory.
 * These same folders are also passed into a new `Channel`, **assembled_ch**, which will be used for the last process.
