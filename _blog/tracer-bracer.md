@@ -42,7 +42,7 @@ Overall, these tools helps us identify single cells that have undergone clonal e
 ## What is Nextflow?
 [Nextflow](https://www.nextflow.io/) is a workflow manager which allows for scalable and reproducible scientific workflows using containers. It simplifies the implementation and deployment of complex, parallel workflows, which is necessary for the thousands of single cells we process. Because Nextflow is based on the dataflow programming model, you can effortlessly link processes together in one workflow.
 
-Nextflow has the capability to run pipelines in the cloud (e.g. AWS Batch) or locally.
+Nextflow has the capability to run pipelines in the cloud (e.g. AWS Batch), on high performance compute cluster schedulers (e.g. LSF, SGE, SLURM, PBS), or locally.
 
 
 ## The Implementation
