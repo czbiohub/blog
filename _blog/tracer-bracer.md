@@ -34,7 +34,7 @@ For each cell, an output directory is created with output from Bowtie2, Trinity,
 
 2. ***Summarize*** takes the directories output from the ***assemble*** phase of several cells. Recall that B cells undergo hypermutation during clonal expansion, so the results in this step differ for TraCeR and BraCeR. In TraCeR, clone assignments are generated for each cell. In BraCeR, we receive a database file containing all the reconstructed sequences (e.g. CDR3, V and J genes).
 
-For TraCeR, we don't need to take any further steps after ***summarize***, as we have the clonal groups already assigned. For BraCeR, extra steps outside of the tool are necessary to generate clone assignments. Clone assignment is accomplished by first dividing the antibody heavy chain variable region (VH) sequences into groups which contain the same V and J genes and CDR3 length. A clone assignment is made if the amino acid CDR3 sequence shares *similarity* with other members within its groups. The similarity criteria is up to the investigators judgement. 
+For TraCeR, we don't need to take any further steps after ***summarize***, as we have the clonal groups already assigned. For BraCeR, extra steps outside of the tool are necessary to generate clone assignments. Clone assignment is accomplished by first dividing the antibody heavy chain variable region (VH) sequences into groups which contain the same V and J genes and CDR3 length. A clone assignment is made if the amino acid CDR3 sequence shares *similarity* with other members within its groups. The similarity criteria is up to the investigators judgement.
 
 Overall, these tools helps us identify single cells that have undergone clonal expansion. We currently run TraCeR and BraCeR analysis pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) by manually submitting [jobs](https://docs.aws.amazon.com/batch/latest/userguide/jobs.html). We submit thousands of cells to be assembled asynchronously, then pull the assembled cells down and summarize them to identify clonal groups. While this workflow already carries out the analysis, we wanted to improve its reproducibility. Thus, we turned to Nextflow.
 
@@ -56,21 +56,25 @@ The implementation performs three steps which are linked together through `Chann
 The first step is to prepare the reads for the next processes. In this specific workflow, zipped fastq pair files are expected. Unzipping them first is necessary as the next steps only work wit unzipped files.
 
 **`process unzip_reads:`**
-> The first step is to open a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user. The fastq files get unzipped and passed into a new `Channel`, ***reads_unzipped_ch***,for the following process.
+* The first step is to open a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user.
+* The file pairs get unzipped and passed into a new `Channel`, ***reads_unzipped_ch***,for the following process.
 
 
 ### Step 2: Assembly
 In this step, we assemble the reads with either TraCeR or BraCeR. The figure below illustrates a run with TraCeR.
 
 **`process assemble:`**
-> This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR or BCR sequences, depending which analysis is being ran. The reads are assembled asynchronously and the output folders are published to a user-specified directory. These same folders are also passed into a new `Channel`, ***assembled_ch***, which will be used for the last process.
+* This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR or BCR sequences, depending which analysis is being ran.
+* The reads are assembled asynchronously and the output folders are published to a user-specified directory.
+* These same folders are also passed into a new `Channel`, ***assembled_ch***, which will be used for the last process.
 
 
 ### Step 3: Summarize
 Finally, in this last step we generate summary statistics and begin clone assignment.
 
 **`process summarize:`**
-> This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. This method collects all the files emitted from ***assembled_ch*** into a list and uses that as input for this process. The output is published to the same directory where the assembled files are.
+* This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on ***assembled_ch***. This method collects all the files emitted from ***assembled_ch*** into a list and uses that as input for this process.
+* ***Summarize*** mode is ran and the output is published to the same directory where the assembled files are.
 
 ![nf-tracer run](/images/tracer-bracer/nf-tracer.gif)
 
