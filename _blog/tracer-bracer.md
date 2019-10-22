@@ -55,7 +55,7 @@ The implementation performs three steps which are linked together through `Chann
 ### Step 1: Preparation
 The first step is to prepare the reads for the next processes. In this specific workflow, zipped `fastq` pair files are expected. Unzipping them first is necessary as the next steps only work with unzipped files.
 
-**`process unzip_reads:`**
+#### `process unzip_reads`
 * The first step is to open a `Channel` using the method [`.fromFilePairs()`](https://www.nextflow.io/docs/latest/channel.html#fromfilepairs). This method returns the file pairs matching the [glob](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob) pattern input by the user.
 * The file pairs get unzipped and passed into a new `Channel`, **reads_unzipped_ch**, for the following process.
 
