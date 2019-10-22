@@ -36,7 +36,7 @@ For each cell, an output directory is created with output from Bowtie2, Trinity,
 
 For TraCeR, we don't need to take any further steps after `summarize`, as we have the clonal groups already assigned. For BraCeR, extra steps outside of the tool are necessary to generate clone assignments. Clone assignment is accomplished by first dividing the antibody heavy chain variable region (VH) sequences into groups which contain the same V and J genes and CDR3 length. A clone assignment is made if the amino acid CDR3 sequence shares *similarity* with other members within its groups.
 
-Overall, these tools helps us identify single cells that have undergone clonal expansion. We currently run TraCeR and BraCeR analysis pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) by manually submitting the jobs. We submit thousands of cells to be assembled asynchronously, then pull the assembled cells down and summarize them to identify clonal groups. While this workflow already carries out the analysis, we wanted to improve its reproducibility. Thus, we turned to Nextflow.
+Overall, these tools helps us identify single cells that have undergone clonal expansion. We currently run TraCeR and BraCeR analysis pipelines on [AWS Batch](https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html) by manually submitting [jobs](https://docs.aws.amazon.com/batch/latest/userguide/jobs.html). We submit thousands of cells to be assembled asynchronously, then pull the assembled cells down and summarize them to identify clonal groups. While this workflow already carries out the analysis, we wanted to improve its reproducibility. Thus, we turned to Nextflow.
 
 
 ## What is Nextflow?
@@ -84,5 +84,7 @@ Different visualizations you could create with output from TraCeR and BraCeR inc
 <img src="/images/tracer-bracer/legend.png" alt="legend" width="50%" height="50%">
 </p>
 
+## Conclusion
+Single-cell analyses are key in investigating clonal expansion; however, with the growing number of datasets it has become increasingly difficult to create reproducible workflows to handle them. When implemented together, these tools enable scientists to conduct large and complex analyses in a single, effortless workflow, allowing for the production of beautiful clonal landscapes. 
 
-In conclusion, these tools enable scientists to conduct a plethora of analyses on single-cell datasets. Integrating these tools into a Nextflow workflow allows for the same analysis to be conducted several times on different single-cell datasets, which furthers our exploration of the immune repertoire and how its diversity changes with age.
+Exploring the immune repertoire and its diversity has never been more clear!
