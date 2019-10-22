@@ -61,7 +61,7 @@ The first step is to prepare the reads for the next processes. In this specific 
 
 
 ### Step 2: Assembly
-In this step, we assemble the reads with either TraCeR or BraCeR. The figure below illustrates a run with TraCeR.
+In this step, we assemble the reads with either TraCeR or BraCeR.
 
 #### `process assemble`
 * This process takes in the unzipped fastq files from `reads_unzipped_ch` and reconstructs the TCR or BCR sequences, depending which analysis is being ran.
@@ -75,6 +75,8 @@ Finally, in this last step we generate summary statistics and begin clone assign
 #### `process summarize:`
 * This last process calls the method [`.collect()`](https://www.nextflow.io/docs/latest/operator.html#operator-collect) on `assembled_ch`. This method collects all the files emitted from `assembled_ch` into a list and uses that as input for this process.
 * ***Summarize*** mode is ran and the output is published to the same directory where the assembled files are.
+
+The figure below illustrates a run with TraCeR.
 
 ![nf-tracer run](/images/tracer-bracer/nf-tracer.gif)
 
