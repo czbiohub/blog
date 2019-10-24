@@ -6,7 +6,7 @@ date: 2019-10-20
 author: Clarissa Vazquez-Ramos
 ---
 
-We are interested in how the immune system changes with age, and we accomplish that by building a clonal landscape of T and B cells to illustrate the diversity of the immune repertoire.
+How the immune system changes with age is a highly relevant topic and we have investigated that in [Tabula Muris Senis](https://biorxiv.org/content/10.1101/661728v1) by building a clonal landscape of T and B cells to illustrate the diversity of the immune repertoire.
 
 
 ## What are T and B Cells?
@@ -91,6 +91,6 @@ Different visualizations you could create with output from TraCeR and BraCeR inc
 </p>
 
 ## Conclusion
-Single-cell analyses are key in investigating clonal expansion; however, with the growing number of datasets it has become increasingly difficult to create reproducible workflows to handle them. When implemented together, these tools enable scientists to conduct large and complex analyses in a single, effortless workflow, allowing for the production of beautiful clonal landscapes.
+Single-cell analyses are key in investigating clonal expansion; however, with the growing number of datasets it has become increasingly difficult to create reproducible workflows to handle them. When implemented together, these tools enable scientists to conduct large and complex analyses in a single, effortless workflow, allowing for the production of easy to interpret visualizations.
 
-Exploring the immune repertoire and its diversity has never been more clear!
+Our example illustrates how to use as a way of exploring the immune repertoire and its diversity, but the scope of such tools is far larger and key to reproducible science in the age of big (single-cell) datasets!
