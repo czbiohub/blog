@@ -6,8 +6,7 @@ date: 2019-10-25
 author: Clarissa Vazquez-Ramos
 ---
 
-How the immune system changes with age is a highly relevant topic and we have investigated that in [Tabula Muris Senis](https://biorxiv.org/content/10.1101/661728v1) by building a clonal landscape of T and B cells to illustrate the diversity of the immune repertoire.
-
+How the immune system changes with age is a highly relevant topic and we have investigated that in [Tabula Muris Senis](https://biorxiv.org/content/10.1101/661728v1) by building a clonal landscape of T and B cells to illustrate the diversity of the immune repertoire. 
 
 ## What are T and B Cells?
 <img align="right" src="/images/tracer-bracer/bcell.png" width="25%" height="25%">
@@ -22,7 +21,7 @@ A T cell attacks and kills an antigen-presenting cell directly. When the B cell 
 
 When T and B cells encounter antigen-presenting cells, they undergo clonal expansion — a process in which T and B cells form clones of themselves to fight off pathogens, and remember them for future encounters. It is important to note though that when B cells proliferate, their receptors undergo hypermutation — a process in which BCRs are diversified to enable the immune system to adapt its responses to new threats. These mutations occur at an extremely high rate, so during clonal expansion thousands of B cells may possess slightly different receptors. The B cell with the highest affinity towards the antigen will be selected to produce antibodies.
 
-We can explore clonal expansion in single-cell datasets with the tools TraCeR and BraCeR.
+We choose to explore clonal expansion at the single-cell level to capture differences between the cells and make more in depth assesments of their population, which may be obscured through bulk RNA-seq. The single-cell analysis was conducted with the tools TraCeR and BraCeR.
 
 ## TraCeR & BraCeR Core Functions
 <img align="right" src="/images/tracer-bracer/tracer-bracer-fn.png" alt="tracer-bracer core functions" width="30%" height="30%">
@@ -32,7 +31,7 @@ We can explore clonal expansion in single-cell datasets with the tools TraCeR an
 1. ***Assemble*** is almost identical in both TraCeR and BraCeR. They both take paired-end scRNA-seq reads and reconstruct the TCR and BCR sequences. The reconstructed sequences are used to identify cells that have the same receptor sequence. Reconstruction is accomplished with the following steps: [alignment](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml), [de novo assembly](https://github.com/trinityrnaseq/trinityrnaseq/wiki), [IgBlast](http://www.ncbi.nlm.nih.gov/igblast/faq.html#standalone), and TCR and BCR [expression quantification](http://pachterlab.github.io/kallisto/). BraCeR takes an extra step to perform a [BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download) search before IgBlast.
 For each cell, an output directory is created with output from Bowtie2, Trinity, (BLAST), IgBlast, and Kallisto as well as files describing the TCR and BCR sequences that were assembled.
 
-2. ***Summarize*** takes the directories output from the ***assemble*** phase of several cells. Recall that B cells undergo hypermutation during clonal expansion, so the results in this step differ for TraCeR and BraCeR. In TraCeR, clone assignments are generated for each cell. In BraCeR, we receive a database file containing all the reconstructed sequences (e.g. CDR3, V and J genes).
+2. ***Summarize*** takes the directories output from the ***assemble*** phase of several cells. Recall that B cells undergo hypermutation during clonal expansion, so the results in this step differ for TraCeR and BraCeR. In TraCeR, clone assignments are generated for each cell if they are derived from the same parent cell. In BraCeR, we receive a database file containing all the reconstructed sequences (e.g. CDR3, V and J genes).
 
 For TraCeR, we don't need to take any further steps after ***summarize***, as we have the clonal groups already assigned. For BraCeR, extra steps outside of the tool are necessary to generate clone assignments. Clone assignment is accomplished as described in the methods section of the [Croote et al.](https://science.sciencemag.org/content/362/6420/1306) paper. First the antibody heavy chain variable region (VH) sequences are divided into groups which contain the same V and J genes and CDR3 length. A clone assignment is made if a cell's amino acid CDR3 sequence shares *similarity* with other members within its groups. The similarity criteria is up to the investigators judgement.
 
